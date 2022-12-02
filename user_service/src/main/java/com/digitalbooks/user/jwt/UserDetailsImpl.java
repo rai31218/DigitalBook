@@ -1,5 +1,6 @@
 package com.digitalbooks.user.jwt;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -35,18 +36,19 @@ public class UserDetailsImpl implements UserDetails {
 		this.authorities = authorities;
 	}
 
-//	public static UserDetailsImpl build(Users user) {
-//		List<GrantedAuthority> authorities = user.getRoles().stream()
+	public static UserDetailsImpl build(Users user) {
+		List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(user.getRoles().getRoleName()));
+//				user.getRoles().stream()
 //				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
 //				.collect(Collectors.toList());
-//
-//		return new UserDetailsImpl(
-//				user.getId(), 
-//				user.getUserName(), 
-//				user.getEmail(),
-//				user.getPassword(), 
-//				authorities);
-//	}
+
+		return new UserDetailsImpl(
+				user.getId(), 
+				user.getUserName(), 
+				user.getEmail(),
+				user.getPassword(), 
+				authorities);
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

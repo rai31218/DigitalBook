@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+
 import com.digitalbooks.user.model.Users;
 import com.digitalbooks.user.repository.UserRepository;
 
@@ -21,8 +22,8 @@ class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         Users user = userRepo.findByUserName(userName);
        // return new UserPrincipalImp(account);
-        
-        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), new ArrayList());
+        return UserDetailsImpl.build(user);
+       // return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), new ArrayList());
     }
 
     // ...

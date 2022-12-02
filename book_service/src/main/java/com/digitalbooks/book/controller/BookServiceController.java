@@ -73,7 +73,7 @@ public class BookServiceController {
     	
     }
 	@PostMapping("/author/{author-id}/books/{book-id}")
-    public Books updateBook(@PathVariable("author-id") int authorId , @PathVariable("book-id") int bookId,
+    public void updateBook(@PathVariable("author-id") int authorId , @PathVariable("book-id") int bookId,
     		@RequestBody Books book) {
 		bookService.updateBook(authorId,bookId,book );
 	}

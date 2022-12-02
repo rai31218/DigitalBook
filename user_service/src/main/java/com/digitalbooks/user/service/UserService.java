@@ -14,5 +14,10 @@ public class UserService {
 	public void saveUser(Users user) {
 		userRepository.save(user);
 	}
+
+	public Users duplicateUserNameAnsEmail(String userName, String email) {
+		return userRepository.findByUserNameAndEmail(userName, email);
+		
+	}
 	
 }

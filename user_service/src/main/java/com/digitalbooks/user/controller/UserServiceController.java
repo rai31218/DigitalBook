@@ -1,8 +1,7 @@
 package com.digitalbooks.user.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +25,7 @@ import com.digitalbooks.user.jwt.JwtResponse;
 import com.digitalbooks.user.jwt.JwtUtil;
 import com.digitalbooks.user.jwt.UserDetailsImpl;
 import com.digitalbooks.user.model.Users;
+import com.digitalbooks.user.payload.response.MessageResponse;
 import com.digitalbooks.user.service.UserService;
 
 @RestController
@@ -79,16 +79,23 @@ public class UserServiceController {
      												 userDetails.getEmail(), 
      												 roles));
         } catch (Exception ex) {
-            throw new Exception("inavalid username/password");
+        	return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password!"));
+            //throw new Exception("inavalid username/password");
         }
     
     }
 	
     @PostMapping("/sign-up")
-    public Users signUp(@RequestBody Users user) {
+    public ResponseEntity<?> signUp(@RequestBody Users user) {
+    	Users duplicateUser= userService.duplicateUserNameAnsEmail(user.getUserName(), user.getEmail());
+    	if( duplicateUser!=null) {
+    		return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Username and Email combination is already taken!"));
+    	}
     	user.setPassword(encoder.encode(user.getPassword()));
     	userService.saveUser(user);
-		return user;
+		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     	
     }
 	

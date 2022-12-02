@@ -27,18 +27,16 @@ public class UserServiceApplication {
 	}
 	
 	
-	@PostConstruct
-	public void initUsesr() {
-		List<Users> users= Arrays.asList(
-			new Users(1, "Rudra", "pwd1", "rudra@gmail.com", new Roles(2, "Author"), new Date()),
-			new Users(2, "RuIshanidra", "pwd2", "RuIshanidra@gmail.com", new Roles(3, "Reader"), new Date()),
-			new Users(3, "Rai", "pwd3", "rai@gmail.com", new Roles(1, "Guest"), new Date()));
-				
-				
-		userRepository.saveAll(users);
-				
-				
-		
-	}
+//	@PostConstruct
+//	public void initUsesr() {
+//		List<Users> users= Arrays.asList(
+//			new Users(1, "Rudra", "pwd1", "rudra@gmail.com", new Roles(2, "Author"), new Date()),
+//			new Users(2, "RuIshanidra", "pwd2", "RuIshanidra@gmail.com", new Roles(3, "Reader"), new Date()),
+//			new Users(3, "Rai", "pwd3", "rai@gmail.com", new Roles(1, "Guest"), new Date()));
+//				
+//				
+//		userRepository.saveAll(users);
+	
+//	}
 
 }

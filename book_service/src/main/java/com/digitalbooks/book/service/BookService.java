@@ -19,4 +19,9 @@ public class BookService {
 		
 	}
 
+	public void updateBook(int authorId, int bookId, Books book) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
