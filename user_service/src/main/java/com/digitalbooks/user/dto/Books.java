@@ -1,55 +1,33 @@
-package com.digitalbooks.book.model;
+package com.digitalbooks.user.dto;
 
 import java.sql.Blob;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.springframework.web.multipart.MultipartFile;
 
-@Entity
-@Table(name="BOOKS")
 public class Books {
+
+
+
+//	@JsonProperty
+//	public Blob logo; 
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
-//	@Transient
-//	MultipartFile file;
-	
-	@Lob
-	public Blob logo; 
-	
-	@Column(name="TITLE")
+
 	private String title;
-	
-	@Column(name="Category")
+
 	private String category;
-	
-	@Column(name="Price")
+
 	private double price;
-	
-	@Column(name="AUTHOR")
+
 	private int authorId;
-	
-	@Column(name="PUBLISHER")
+
 	private String publisher;
-	
-	@Column(name="PUBLISHED_DATE")
+
 	private Date publishedDate; 
-	
-	@Column(name="ACTIVE")
+
 	private boolean active;
-	
-	@Column(name="CONTENT")
+
 	private String content;
 	
 	
@@ -64,7 +42,7 @@ public class Books {
 			//, MultipartFile file
 			) {
 		super();
-		this.logo = logo;
+		//this.logo = logo;
 		this.title = title;
 		this.category = category;
 		this.price = price;
@@ -75,12 +53,19 @@ public class Books {
 		this.content = content;
 	//	this.file = file;
 	}
-	public Blob getLogo() {
-		return logo;
-	}
-	public void setLogo(Blob logo) {
-		this.logo = logo;
-	}
+	
+//	public int getId() {
+//		return id;
+//	}
+//	public void setId(int id) {
+//		this.id = id;
+//	}
+//	public Blob getLogo() {
+//		return logo;
+//	}
+//	public void setLogo(Blob logo) {
+//		this.logo = logo;
+//	}
 	public String getTitle() {
 		return title;
 	}

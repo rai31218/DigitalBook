@@ -1,22 +1,19 @@
 package com.digitalbooks.user;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.Bean;
 //import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.web.client.RestTemplate;
 
-import com.digitalbooks.user.model.Roles;
-import com.digitalbooks.user.model.Users;
 import com.digitalbooks.user.repository.UserRepository;
 
+
+
 @SpringBootApplication
-//@EnableEurekaClient
+@EnableEurekaClient
 public class UserServiceApplication {
 
 	
@@ -26,6 +23,11 @@ public class UserServiceApplication {
 		SpringApplication.run(UserServiceApplication.class, args);
 	}
 	
+	@Bean
+	public RestTemplate restTemplate()
+	{
+		return new RestTemplate();
+	}
 	
 //	@PostConstruct
 //	public void initUsesr() {

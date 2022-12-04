@@ -7,6 +7,11 @@ public class MessageResponse {
 	    this.message = message;
 	  }
 
+	public MessageResponse() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getMessage() {
 		return message;
 	}

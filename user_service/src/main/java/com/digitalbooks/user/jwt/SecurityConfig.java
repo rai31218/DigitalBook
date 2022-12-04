@@ -8,10 +8,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -51,6 +51,8 @@ public class SecurityConfig  {
         authenticationManagerBuilder.userDetailsService(userDetailsService);
         authenticationManager = authenticationManagerBuilder.build();
 
+        
+        
 //        http.csrf().disable()
 //       // .cors().disable()
 //        .authorizeHttpRequests().antMatchers("/authenticate").permitAll()
@@ -62,7 +64,12 @@ public class SecurityConfig  {
        // return http.build();
         return authenticationManager;
     }
-
+    
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**");
+    }
+  
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -79,11 +86,19 @@ public class SecurityConfig  {
 //        http.addFilterBefore(authenticationJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 //        
         
+ 
+    	
+    	
         http.csrf().disable()
          .cors().disable()
         .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-         .authorizeHttpRequests().antMatchers("/api/v1/digitalbooks/sign-in").permitAll()
-         .antMatchers("/api/v1/digitalbooks/sign-up").permitAll()
+         .authorizeHttpRequests().antMatchers("/digitalbooks/sign-in").permitAll()
+         .antMatchers("/digitalbooks/sign-up").permitAll()
+         .antMatchers("/digitalbooks/searchBook").permitAll()
+         .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
+         .antMatchers("/digitalbooks/test").permitAll()
+       
+         
              .anyRequest().authenticated()
              .and()
      //        .authenticationManager(authenticationManager)
