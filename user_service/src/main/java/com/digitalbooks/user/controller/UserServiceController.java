@@ -2,6 +2,7 @@ package com.digitalbooks.user.controller;
 
 import java.io.IOException;
 import java.sql.Blob;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -143,11 +144,6 @@ public class UserServiceController {
 		
 	}
 		
-	@PostMapping("/signin")
-	public String authenticate() {
-		System.out.println("Calling User service");
-		return "It is User Service";
-	}
 
 	@PostMapping("/sign-in")
 	public ResponseEntity<?> generateToken(@RequestBody AuthRequest authRequest,
@@ -180,6 +176,7 @@ public class UserServiceController {
 					.body(new MessageResponse("Username and Email combination is already taken!"));
 		}
 		user.setPassword(encoder.encode(user.getPassword()));
+		user.setCreatedDate(new Date());
 		userService.saveUser(user);
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 
