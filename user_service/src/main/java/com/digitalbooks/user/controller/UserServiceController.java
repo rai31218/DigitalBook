@@ -110,7 +110,7 @@ public class UserServiceController {
 	public ResponseEntity<?> updateBook(@RequestParam(value="file", required=false) MultipartFile file,
     		@ModelAttribute Books book,
     		@PathVariable("author-id") int authorId,
-    		@PathVariable("book-id") int bookId) throws IOException {
+    		@PathVariable("book-id") int bookId) throws Exception {
 		boolean isUserAuthor = userService.checkAuthorExists(authorId);
 		if(isUserAuthor) {
 			byte[] bytes = null;
@@ -214,7 +214,7 @@ public class UserServiceController {
 	}
 	
 	@PutMapping("author/{author-id}/books/{book-id}")
-	public ResponseEntity blockBook(@PathVariable("author-id") int userId, @PathVariable("book-id") int bookId, @RequestParam("block") String block) {
+	public ResponseEntity<?> blockBook(@PathVariable("author-id") int userId, @PathVariable("book-id") int bookId, @RequestParam("block") String block) {
 		ResponseEntity<MessageResponse> response = restTemplate.getForEntity(bookUrl+"cancel/"+userId+"/"+bookId+"/"+block , MessageResponse.class);
 		return response;
 		

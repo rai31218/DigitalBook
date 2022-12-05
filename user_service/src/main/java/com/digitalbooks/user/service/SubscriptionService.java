@@ -62,8 +62,10 @@ public class SubscriptionService {
 
 	public boolean checkduplicateSubscription(int bookId, SubscriptionPayLoad subscribe) {
 		Users user =userRepository.findByEmail(subscribe.getEmail());
-		Subscription subscription = subscriptionRepository.findByBookId(bookId);
+		//Subscription subscription = subscriptionRepository.findByBookId(bookId);
+		Subscription subscription = subscriptionRepository.findByBookIdAndUser(bookId,user);
 		boolean isDuplicate = false;
+		
 		if(subscription!=null && subscription.getUser().getId()==user.getId() &&  subscription.getBookId()==bookId
 				&& !subscription.isCancelled()) {
 			isDuplicate=true;

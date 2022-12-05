@@ -94,7 +94,7 @@ public class SubscriptionController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not found");
 		} else {
 			Optional<List<Subscription>> subscriptionList = subscriptionService.fetchSubscribedBooksForUser(userId);
-			List<BooksWithLogo> listofBooks = new ArrayList();
+			List<BooksWithLogo> listofBooks = new ArrayList<BooksWithLogo>();
 			if(!subscriptionList.isEmpty()&& !subscriptionList.get().isEmpty()) {
 				for (int i = 0; i < subscriptionList.get().size(); i++) {
 					int bookId = subscriptionList.get().get(i).getBookId();
