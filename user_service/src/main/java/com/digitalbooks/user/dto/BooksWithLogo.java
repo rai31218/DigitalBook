@@ -1,9 +1,7 @@
 package com.digitalbooks.user.dto;
 
 import java.sql.Blob;
-import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class BooksWithLogo {
@@ -21,7 +19,6 @@ public class BooksWithLogo {
 
 	public BooksWithLogo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Blob getLogo() {
@@ -39,11 +36,5 @@ public class BooksWithLogo {
 	public void setBooks(Books books) {
 		this.books = books;
 	}
-	
-	
-	
-	
-
-
 
 }

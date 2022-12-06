@@ -1,10 +1,5 @@
 package com.digitalbooks.book.payload.response;
 
-import java.sql.Blob;
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 
 public class BookContentResponse {
 	
@@ -43,7 +38,6 @@ public class BookContentResponse {
 
 	public BookContentResponse() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

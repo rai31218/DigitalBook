@@ -6,7 +6,7 @@ import com.digitalbooks.book.model.Books;
 public class BooksWithByteFile {
 
 
-    public byte[] file; 
+    private byte[] file; 
 	
 	private Books books;
 
@@ -18,7 +18,6 @@ public class BooksWithByteFile {
 
 	public BooksWithByteFile() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public byte[] getFile() {

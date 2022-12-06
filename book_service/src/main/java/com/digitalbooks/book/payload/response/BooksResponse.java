@@ -1,9 +1,7 @@
 package com.digitalbooks.book.payload.response;
 
-import java.sql.Blob;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class BooksResponse {
@@ -92,8 +90,7 @@ public class BooksResponse {
 
 	public BooksResponse() {
 		super();
-		// TODO Auto-generated constructor stub
-	} 
+			} 
 	
 	
 

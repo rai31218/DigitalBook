@@ -54,15 +54,13 @@ public class SubscriptionService {
 
 	public boolean checkUser(SubscriptionPayLoad subscribe) {
 		 Users user =userRepository.findByEmail(subscribe.getEmail());
-		 boolean isReader = user.getRoles().getId()==2;
-		 return isReader;
+		 return user.getRoles().getId()==2;
 		
 	}
 
 
 	public boolean checkduplicateSubscription(int bookId, SubscriptionPayLoad subscribe) {
 		Users user =userRepository.findByEmail(subscribe.getEmail());
-		//Subscription subscription = subscriptionRepository.findByBookId(bookId);
 		Subscription subscription = subscriptionRepository.findByBookIdAndUser(bookId,user);
 		boolean isDuplicate = false;
 		
@@ -85,10 +83,8 @@ public class SubscriptionService {
 
 
 	public Optional<List<Subscription>> fetchSubscribedBooksForUser(int userId) {
-		Optional<List<Subscription>> subscriptionList = 
-				subscriptionRepository.fetchSubscriptionByUser(userId);
 		
-		return subscriptionList;
+		return subscriptionRepository.fetchSubscriptionByUser(userId);
 		
 	}
 
@@ -101,30 +97,9 @@ public class SubscriptionService {
 	}
 
 
-//	public void fetchBookContentBySubscriptionId(String email, String subscriptionId) {
-//		Users user =userRepository.findByEmail(email);
-//		int userId= user.getId();
-//		Optional<Subscription> subscription = subscriptionRepository.findById(subscriptionId);
-//		
-//		if(!subscription.isEmpty()) {
-//			if(subscription.get().getUser().getId()==userId) {
-//					
-//				
-//			}
-//			else {
-//				//not a subscriber
-//			}
-//		}
-//		else {
-//			
-//		}
-//		
-//	}
-
 
 	public Subscription fetchSubscriptionById(String subscriptionId) {
 		Optional<Subscription> subscription = subscriptionRepository.findById(subscriptionId);
-		boolean subscriptionPresent = true;
 		if(!subscription.isEmpty()) {
 			if( !subscription.get().isCancelled()) {
 				return subscription.get();

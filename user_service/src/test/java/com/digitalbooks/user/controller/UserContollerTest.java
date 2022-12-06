@@ -1,13 +1,15 @@
 package com.digitalbooks.user.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-//import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.net.URI;
+import java.util.Optional;
+
+import javax.ws.rs.core.Response.Status;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.digitalbooks.user.dto.Books;
+import com.digitalbooks.user.payload.response.MessageResponse;
 import com.digitalbooks.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,6 +45,12 @@ public class UserContollerTest {
 
 	@MockBean
 	private UserService userServiceMock;
+	
+	@MockBean
+	private AuthenticationManager authenticationManager;
+	
+	@MockBean
+	RestTemplate restTemplate;
 
 	 private MockRestServiceServer mockServer;
 	 private ObjectMapper mapper = new ObjectMapper();
@@ -72,8 +82,7 @@ public class UserContollerTest {
 
 	@Test
 	public void testGenerateToken() {
-		//fail("Not yet implemented");
-	}
+}
 
 	@Test
 	public void testSignUp() throws Exception {
@@ -118,8 +127,13 @@ public class UserContollerTest {
 	}
 
 	@Test
-	public void testBlockBook() {
-		//fail("Not yet implemented");
+	public void testBlockBook() throws Exception {
+		 ResponseEntity<MessageResponse> resp= ResponseEntity.ok().body(new MessageResponse("Something")); 
+		when(restTemplate.getForEntity("somevalues", com.digitalbooks.user.payload.response.MessageResponse.class)).thenReturn(resp);
+		//Assert.assertNotNull(ResponseEntity.g);
+				
+		mockMvc.perform(post("/digitalbooks/author/2/books/2"))
+		.andExpect(status().isNotFound());	
 	}
 
 }

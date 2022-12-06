@@ -3,16 +3,8 @@ package com.digitalbooks.user.dto;
 import java.sql.Blob;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 
 public class Books {
-
-
-
-//	@JsonProperty
-//	public Blob logo; 
-	
 
 	private String title;
 
@@ -35,14 +27,11 @@ public class Books {
 	
 	public Books() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public Books(Blob logo, String title, String category, double price, int authorId, String publisher,
 			Date publishedDate, boolean active, String content
-			//, MultipartFile file
 			) {
 		super();
-		//this.logo = logo;
 		this.title = title;
 		this.category = category;
 		this.price = price;
@@ -51,21 +40,9 @@ public class Books {
 		this.publishedDate = publishedDate;
 		this.active = active;
 		this.content = content;
-	//	this.file = file;
 	}
 	
-//	public int getId() {
-//		return id;
-//	}
-//	public void setId(int id) {
-//		this.id = id;
-//	}
-//	public Blob getLogo() {
-//		return logo;
-//	}
-//	public void setLogo(Blob logo) {
-//		this.logo = logo;
-//	}
+
 	public String getTitle() {
 		return title;
 	}

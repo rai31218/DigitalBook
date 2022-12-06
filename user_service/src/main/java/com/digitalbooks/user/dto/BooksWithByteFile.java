@@ -1,10 +1,5 @@
 package com.digitalbooks.user.dto;
 
-import java.sql.Blob;
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 
 public class BooksWithByteFile {
 
@@ -21,7 +16,6 @@ public class BooksWithByteFile {
 
 	public BooksWithByteFile() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public byte[] getFile() {

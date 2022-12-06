@@ -1,25 +1,20 @@
 package com.digitalbooks.book.service;
 
-import java.io.IOException;
+
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Optional;
 
-import javax.sql.rowset.serial.SerialException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.digitalbooks.book.model.Books;
 import com.digitalbooks.book.payload.response.BookContentResponse;
 import com.digitalbooks.book.payload.response.BooksResponse;
 import com.digitalbooks.book.payload.response.BooksWithByteFile;
-import com.digitalbooks.book.payload.response.MessageResponse;
 import com.digitalbooks.book.repository.BookRepository;
 
 @Service
@@ -30,7 +25,6 @@ public class BookService {
 	private BookRepository bookRepository;
 	
 	public Books saveBook(Blob blob, BooksWithByteFile book, int authorId) {
-	//	byte[] byteArray = book.getLogo();
 		Optional<Books> existingBook = bookRepository.findByTitleAndAuthorId(book.getBooks().getTitle(),authorId);
 		if(existingBook.isEmpty()) { // author with same book title check
 			Books bookToBeSaved = new Books();
@@ -43,8 +37,7 @@ public class BookService {
 			bookToBeSaved.setPublishedDate(new Date());
 			bookToBeSaved.setPublisher(book.getBooks().getPublisher());
 			bookToBeSaved.setTitle(book.getBooks().getTitle());
-			Books savedBook = bookRepository.save(bookToBeSaved);
-			return savedBook;
+			return bookRepository.save(bookToBeSaved);
 		}
 		else {
 			return null;
@@ -53,10 +46,10 @@ public class BookService {
 	}
 
 	public Books updateBook(Blob blob, BooksWithByteFile book, int authorId, int bookId) {
-		//Optional<Books> existingBook=  bookRepository.findByIdAndAuthorId(bookId,authorId);
+		
 		Optional<Books> existingBookForUser = bookRepository.searchByIdAndAuthorId(bookId,authorId);
 		if(!existingBookForUser.isEmpty()) {
-		//if(!existingBook.isEmpty()) {
+
 
 			existingBookForUser.get().setLogo(blob);
 			existingBookForUser.get().setTitle(book.getBooks().getTitle());
@@ -65,20 +58,11 @@ public class BookService {
 			existingBookForUser.get().setActive(book.getBooks().isActive());
 			existingBookForUser.get().setContent(book.getBooks().getContent());
 			existingBookForUser.get().setCategory(book.getBooks().getCategory());
-			Books updatedBook = bookRepository.save(existingBookForUser.get());
-			return updatedBook;
-			//return ResponseEntity.ok().body("Book is updated successfully");
-	
-//		}
-//		else {
-//			return ResponseEntity.badRequest().body(new MessageResponse("Book does not exist!"));
-//            
-//		}
+			return bookRepository.save(existingBookForUser.get());
 		}
 		else {
 			return null;
-			//ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("The book does not belong to the mentioned authordfdfdffddfdf"));
-		}
+         }
 		
 	}
 
@@ -104,12 +88,11 @@ public class BookService {
 
 	public byte[] getBookForLogo(String category, String title, int authorId, int price, String publisher) {
 		
-		byte byteArray[] = null;
+		byte[] byteArray = null;
 		try {
 			Optional<Books> book =	bookRepository.searchBook(category,title,authorId,price,publisher);
 			byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
 		} catch (SQLException e) {
-			System.out.println("Exception: "+ e.getMessage());
 			e.printStackTrace();
 		}
 		return byteArray;
@@ -122,12 +105,11 @@ public class BookService {
 
 	public byte[] getSubscribedBookForLogo(int bookId) {
 
-		byte byteArray[] = null;
+		byte[] byteArray = null;
 		try {
 			Optional<Books> book =	bookRepository.findById(bookId);
 			byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
 		} catch (SQLException e) {
-			System.out.println("Exception: "+ e.getMessage());
 			e.printStackTrace();
 		}
 		return byteArray;
@@ -166,35 +148,28 @@ public class BookService {
 
 	public Books checkBookUserAvailability(int userId, int bookId) {
 		Optional<Books> book =	bookRepository.findById(bookId);
-		if(!book.isEmpty()) {
-			if(book.get().getAuthorId()==userId) {
-				return book.get();
-			}
-			else {
-				return null;
-			}
-		}
-		else {
-			return null;
+		if(!book.isEmpty() && book.get().getAuthorId()==userId) {		
+				return book.get();	
 		}
 		
+			return null;
+				
 	}
 
 	public Books blockBook(int bookId, String block) {
 		Optional<Books> book =	bookRepository.findById(bookId);
 		Books savedBook  = null; 
-		if(block.equalsIgnoreCase("yes")) {
-			if(!book.isEmpty()) {
+		if(block.equalsIgnoreCase("yes") && !book.isEmpty()) {
+			
 				book.get().setActive(false);
 				 savedBook = bookRepository.save(book.get());
-			}
+			
 			
 		}
-		if(block.equalsIgnoreCase("no")) {
-			if(!book.isEmpty()) {
+		if(block.equalsIgnoreCase("no") && !book.isEmpty()) {
+			
 				book.get().setActive(true);
 				 savedBook = bookRepository.save(book.get());
-			}
 			
 		}
 		

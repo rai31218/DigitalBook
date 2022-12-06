@@ -63,7 +63,6 @@ public class UserServiceController {
 	
 	@GetMapping("/test")
 	public String test() {
-		System.out.println("Calling User service");
 		return "It is User Service";
 	}
 
@@ -88,8 +87,7 @@ public class UserServiceController {
 			BooksWithByteFile booksWithLogo = new BooksWithByteFile();
 			booksWithLogo.setFile(bytes);
 			booksWithLogo.setBooks(book);
-			
-			///// create another dto with Books and Bytes[]
+
 			Books savedBook = restTemplate.postForObject(createBook+authorId, booksWithLogo, Books.class);
 
 			if(savedBook!=null) {
@@ -134,7 +132,6 @@ public class UserServiceController {
 			else {
 		       return ResponseEntity.badRequest().body(new MessageResponse("Author does not have the book"));
 			}
-			//return updatedBook;
 		}
 		else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User is either not present or user does not have author role"));
@@ -154,7 +151,6 @@ public class UserServiceController {
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			String jwt = jwtUtil.generateToken(authRequest.getUserName());
-			System.out.println(jwt);
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
@@ -163,7 +159,7 @@ public class UserServiceController {
 					userDetails.getEmail(), roles));
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password!"));
-			// throw new Exception("inavalid username/password");
+			
 		}
 
 	}
@@ -195,10 +191,8 @@ public class UserServiceController {
 		byte[] logo = restTemplate.getForObject(
 				bookUrl + "logo/" + category + "/" + title + "/" + authoId + "/" + price + "/" + publisher,
 				byte[].class);
-		System.out.println("Logo: " + logo);
 		responseBook = restTemplate.getForObject(
 				bookUrl + category + "/" + title + "/" + authoId + "/" + price + "/" + publisher, Books.class);
-		System.out.println("responseBook: " + responseBook);
 		try {
 			Blob blob = userService.fetchBlob(logo);
 			booksWithLogo = new BooksWithLogo(blob, responseBook);
@@ -215,8 +209,7 @@ public class UserServiceController {
 	
 	@PutMapping("author/{author-id}/books/{book-id}")
 	public ResponseEntity<?> blockBook(@PathVariable("author-id") int userId, @PathVariable("book-id") int bookId, @RequestParam("block") String block) {
-		ResponseEntity<MessageResponse> response = restTemplate.getForEntity(bookUrl+"cancel/"+userId+"/"+bookId+"/"+block , MessageResponse.class);
-		return response;
+	 return restTemplate.getForEntity(bookUrl+"cancel/"+userId+"/"+bookId+"/"+block , MessageResponse.class);
 		
 		
 	}

@@ -10,9 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name="BOOKS")
@@ -21,9 +19,6 @@ public class Books {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-//	@Transient
-//	MultipartFile file;
 	
 	@Lob
 	public Blob logo; 
@@ -57,11 +52,9 @@ public class Books {
 	
 	public Books() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public Books(Blob logo, String title, String category, double price, int authorId, String publisher,
 			Date publishedDate, boolean active, String content
-			//, MultipartFile file
 			) {
 		super();
 		this.logo = logo;
@@ -73,7 +66,7 @@ public class Books {
 		this.publishedDate = publishedDate;
 		this.active = active;
 		this.content = content;
-	//	this.file = file;
+
 	}
 	public Blob getLogo() {
 		return logo;

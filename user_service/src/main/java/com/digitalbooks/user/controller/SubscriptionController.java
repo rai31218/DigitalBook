@@ -37,13 +37,16 @@ public class SubscriptionController {
 
 	String bookUrl = "http://localhost:8082/digitalbooks/getBook/";
 
+	public static final String USER_NOT_FOUND = "User is not found";
+	public static final String BOOK_NOT_FOUND = "No book is available for current selection";
+	public static final String SUBSCRIPTION_NOT_FOUND ="Subscription is not found";
+
 	@PostMapping("/{book-id}/subscribe")
 	public ResponseEntity<?> subscribe(@PathVariable("book-id") int bookId,
 			@RequestBody SubscriptionPayLoad subscribe) {
 		Books responseBook = null;
 
 		boolean isUserExist = subscriptionService.checkUserExists(subscribe);
-		// boolean isBookExist = subscriptionService.checkBookExists(bookId);
 
 		try {
 			responseBook = restTemplate.getForObject(bookUrl + bookId, Books.class);
@@ -59,8 +62,7 @@ public class SubscriptionController {
 					boolean isReader = subscriptionService.checkUser(subscribe);
 					if (isReader) {
 
-						ResponseEntity<?> response = subscriptionService.subscribe(bookId, responseBook, subscribe);
-						return response;
+						return subscriptionService.subscribe(bookId, responseBook, subscribe);
 					} else {
 						return ResponseEntity.badRequest()
 								.body(new com.digitalbooks.user.payload.response.MessageResponse(
@@ -71,7 +73,7 @@ public class SubscriptionController {
 							"User has already subscribed for this book"));
 				}
 			} else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not found");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(USER_NOT_FOUND));
 			}
 		}
 
@@ -81,9 +83,9 @@ public class SubscriptionController {
 		}
 
 	}
-	
-/**Reader can fetch all subscribed books**/
-	
+
+	/** Reader can fetch all subscribed books **/
+
 	@GetMapping("readers/{emailId}/books")
 	public ResponseEntity<?> getSubscribedBooks(@PathVariable("emailId") String email) throws Exception {
 		Books responseBook = null;
@@ -91,11 +93,11 @@ public class SubscriptionController {
 
 		int userId = subscriptionService.getUserIdByEmail(email);
 		if (userId == 0) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
 		} else {
 			Optional<List<Subscription>> subscriptionList = subscriptionService.fetchSubscribedBooksForUser(userId);
-			List<BooksWithLogo> listofBooks = new ArrayList<BooksWithLogo>();
-			if(!subscriptionList.isEmpty()&& !subscriptionList.get().isEmpty()) {
+			List<BooksWithLogo> listofBooks = new ArrayList<>();
+			if (!subscriptionList.isEmpty() && !subscriptionList.get().isEmpty()) {
 				for (int i = 0; i < subscriptionList.get().size(); i++) {
 					int bookId = subscriptionList.get().get(i).getBookId();
 
@@ -110,29 +112,23 @@ public class SubscriptionController {
 						throw new Exception(ex.getMessage());
 					}
 					if (responseBook == null) {
-						return ResponseEntity.status(HttpStatus.NOT_FOUND)
-								.body("No book is available for current selection");
-					} 
+						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BOOK_NOT_FOUND);
+					}
 				}
-				
-					//return ResponseEntity.ok(listofBooks);
-				
+
 				return ResponseEntity.ok(listofBooks);
 			}
-			
+
 			else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body("No subscription found");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No subscription found");
 			}
-			
-			
 
 		}
 
 	}
 
-	/****Reader can fetch a subscribe book ****/
-	
+	/**** Reader can fetch a subscribe book ****/
+
 	@GetMapping("readers/{emailId}/books/{subscription-id}")
 	public ResponseEntity<?> fetchBookContentBySubscriptionId(@PathVariable("emailId") String email,
 			@PathVariable("subscription-id") String subscriptionId) throws Exception {
@@ -141,11 +137,11 @@ public class SubscriptionController {
 		int userId = subscriptionService.getUserIdByEmail(email);
 		Subscription subscription = subscriptionService.fetchSubscriptionById(subscriptionId);
 		if (userId == 0) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
 		}
 
 		if (subscription == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subscription is not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(SUBSCRIPTION_NOT_FOUND);
 		}
 		if (subscription.getUser().getId() != userId) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -163,7 +159,7 @@ public class SubscriptionController {
 				throw new Exception(ex.getMessage());
 			}
 			if (responseBook == null) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No book is available for current selection");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BOOK_NOT_FOUND);
 			} else {
 				return ResponseEntity.ok(booksWithLogo);
 			}
@@ -172,35 +168,34 @@ public class SubscriptionController {
 
 	}
 
-	/****Reader can read book content*****/
+	/**** Reader can read book content *****/
 	@GetMapping("readers/{emailId}/books/{subscription-id}/read")
 	public ResponseEntity<?> fetchBookContent(@PathVariable("emailId") String email,
 			@PathVariable("subscription-id") String subscriptionId) throws Exception {
 
 		BookContentResponse responseBook = null;
-		BooksWithLogo booksWithLogo = null;
 		int userId = subscriptionService.getUserIdByEmail(email);
 		Subscription subscription = subscriptionService.fetchSubscriptionById(subscriptionId);
 		if (userId == 0) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
 		}
 
 		if (subscription == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subscription is not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(SUBSCRIPTION_NOT_FOUND);
 		}
 		if (subscription.getUser().getId() != userId) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("The user does not have subscription for this book");
 		} else {
 
-			responseBook = restTemplate.getForObject(bookUrl + "subscribed/content/" + subscription.getBookId(), BookContentResponse.class);
+			responseBook = restTemplate.getForObject(bookUrl + "subscribed/content/" + subscription.getBookId(),
+					BookContentResponse.class);
 
 			if (responseBook == null) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No book is available for current selection");
-			} else if(!responseBook.isActive()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BOOK_NOT_FOUND);
+			} else if (!responseBook.isActive()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This book is blocked");
-			}
-			else {
+			} else {
 				return ResponseEntity.ok(responseBook);
 			}
 
@@ -208,33 +203,27 @@ public class SubscriptionController {
 
 	}
 
-	
 	@PutMapping("readers/{email-id}/books/{subscription-id}/cancel-subscription")
-	public ResponseEntity<?> cancelSubscription(@PathVariable("email-id") String email, 
-			@PathVariable("subscription-id") String subscriptionId){
-		
+	public ResponseEntity<?> cancelSubscription(@PathVariable("email-id") String email,
+			@PathVariable("subscription-id") String subscriptionId) {
+
 		int userId = subscriptionService.getUserIdByEmail(email);
 		Subscription subscription = subscriptionService.fetchSubscriptionById(subscriptionId);
 		if (userId == 0) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
 		}
 
 		if (subscription == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subscription is not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(SUBSCRIPTION_NOT_FOUND);
 		}
 		if (subscription.getUser().getId() != userId) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("The user does not have subscription for this book");
-		}
-		else {
+		} else {
 			ResponseEntity<?> subscriptionCancellation = subscriptionService.cancelSubscription(subscriptionId);
 			return subscriptionCancellation;
 		}
-	
+
 	}
-	
-	
-	
-	
-	
+
 }

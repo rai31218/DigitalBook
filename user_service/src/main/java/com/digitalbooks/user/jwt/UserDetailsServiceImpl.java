@@ -1,6 +1,5 @@
 package com.digitalbooks.user.jwt;
 
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,12 +18,9 @@ class UserDetailsServiceImpl implements UserDetailsService {
    UserRepository userRepo;
    
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userName)  {
         Users user = userRepo.findByUserName(userName);
-       // return new UserPrincipalImp(account);
         return UserDetailsImpl.build(user);
-       // return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), new ArrayList());
-    }
+}
 
-    // ...
 }

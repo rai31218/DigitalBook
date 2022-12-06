@@ -9,7 +9,7 @@ public class MessageResponse {
 
 	public MessageResponse() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public String getMessage() {
