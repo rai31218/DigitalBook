@@ -1,11 +1,11 @@
-<p>subscribed-book works!</p>
+<p>subscribed-book works! </p>
 
 <div class="container mb-4">
     <div class="row">
-      <div class="col-md-6 mx-auto mt-3 pt-5" *ngIf="!isOpenBook">
+      <div class="col-md-6 mx-auto mt-3 pt-5" *ngIf="!isOpenBook && parameter!='subscription'">
         <div class="card shadow-lg rounded border-danger">
-          <div class="card-header text-center text-center bg-danger text-white">
-            <h1>Subscribed Book</h1>
+          <div class="card-header text-center text-center bg-info text-white">
+            <h1>Subscribed Books</h1>
           </div>
           <div class="card-body">
            
@@ -24,23 +24,27 @@
                 </tbody>
 
              </table>
-              
+              <div>
+                <p *ngIf="unsubscribeMessage!=null">{{unsubscribeMessage.message}}</p>
+                <p *ngIf="unsubscribeErrorMessage!=null">{{unsubscribeErrorMessage.message}}</p>
+              </div>
          
           </div>
         </div>
       </div>
-      <div *ngIf="isOpenBook">
-
+     
+      <div *ngIf="isOpenBook && parameter!='subscription'">
     <div class="card shadow-lg rounded border-danger">
-        <div class="card-header text-center text-center bg-danger text-white">
+        <div class="card-header text-center text-center bg-info text-white">
           <h1>Start Reading</h1>
         </div>
         <div class="card-body">   
            <table>
               <tbody style="background-color: white; ">
                   <tr *ngIf="content.err===undefined">
-                      <td style="word-wrap: break-word; font-weight: bold;" >{{content.title}}</td>
-                      <td style="word-wrap: break-word;">{{content.content}}</td>
+                      <p style="word-wrap: break-word; font-weight: bold;" >{{content.title}}</p>
+                      <hr/>
+                      <p style="word-wrap: break-word;">{{content.content}}</p>
                     </tr>
                     <tr *ngIf="content.title===undefined">
                         <td style="word-wrap: break-word; font-weight: bold;" >{{content}}</td>
@@ -51,6 +55,75 @@
            </table>
         </div>
       </div>
+      </div>
+      <!--Search with subscription id-->
+      <div *ngIf="parameter=='subscription'">
+        <div class="col-md-6 mx-auto mt-3 pt-5" >
+          <div class="card shadow-lg rounded border-danger">
+            <div class="card-header text-center text-center bg-info text-white">
+              <h1>Subscribed Book</h1>
+            </div>
+            <div class="card-body">
+  
+              <form [formGroup]="searchSubscriptionForm" (submit)="onSubmitToSearchForSubscription()">
+              <div class="form-group">
+                <div>
+                    <input type='text' formControlName="subscriptionId" class='form-control' [ngClass]="{ 'is-invalid': submitted && f['subscriptionId'].errors }" required placeholder="Unique subscription id"/>
+                    <div *ngIf="submitted && f['subscriptionId'].errors" class="invalid-feedback">
+                      <div *ngIf="f['subscriptionId'].errors['required']">Subscription id is required</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-5 mx-auto">
+                        <input type="submit"  class='btn btn-outline-primary btn-block btn-lg' value='Search' id='search' />
+                    </div>
+                  </div>
+                  <!-- <p *ngIf="subscribedbook!=null">{{subscribedbook}}</p> -->
+                  <p *ngIf="subscribedbookError!=null">{{subscribedbookError}}</p>
+                </div>
+              </div>
+            </form>
+<!-- show-->
+
+<div class="card shadow-lg rounded border-danger" *ngIf="subscribedbook!=null ">
+  <div class="card-header text-center text-center bg-info text-white">
+    <h1>Start Readingok</h1>
+  </div>
+  <div class="card-body">   
+     <table>
+        <tbody style="background-color: white; ">
+            <tr *ngIf="subscribedbook!=null">
+                <p style="word-wrap: break-word; font-weight: bold;" >{{subscribedbook.books.title}}</p>
+                <hr/>
+                <p style="word-wrap: break-word;">{{subscribedbook.books.content}}</p>
+              </tr>
+
+        </tbody>
+     </table>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

@@ -17,11 +17,13 @@ const routes: Routes = [
 },
 { path: 'subescribedbooks', component: SubscribedBookComponent
 },
+
 { path: 'createdbooks', component: CreatedBookComponent
 },
 { path: 'createbooks', component: CreateNewBookComponent
 },
-
+{ path: 'search/:id', component: SubscribedBookComponent
+},
 
   // { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   // { path: 'selfposts', component: PostsComponent, canActivate: [AuthGuard]},

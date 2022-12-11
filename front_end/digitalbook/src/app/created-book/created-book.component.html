@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-6 mx-auto mt-3 pt-5" *ngIf="!isUpdate">
         <div class="card shadow-lg rounded border-danger">
-          <div class="card-header text-center text-center bg-danger text-white">
+          <div class="card-header text-center text-center bg-info text-white">
             <h1>Created Book</h1>
           </div>
           <div class="card-body">
@@ -47,7 +47,7 @@
           <div class="col-md-6 mx-auto mt-3 pt-5">
             <div class="card shadow-lg rounded border-info">
               <div class="card-header text-center text-center bg-info text-white">
-                <h1>Update Book {{isUpdate}}</h1>
+                <h1>Update Book </h1>
               </div>
               <div class="card-body">
                 <form [formGroup]="updateBookForm" (submit)="onSubmitToUpdate()">

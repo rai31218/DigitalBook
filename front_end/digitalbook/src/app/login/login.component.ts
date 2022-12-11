@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(["/"]);
       }
       if(this.userService.currentUserValue.roles[0]=="Author"){
-        this.router.navigate(["/createdbooks"]); 
+        this.router.navigate(["/createbooks"]); 
     }
       
     }
@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(["/"]);
           }
           if(data.roles[0]=="Author"){
-            this.router.navigate(["/createdbooks"]); 
+            this.router.navigate(["/createbooks"]); 
         }
       },
         error: err=>{this.loginErrorMessage= err}

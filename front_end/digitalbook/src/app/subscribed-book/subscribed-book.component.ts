@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Book } from '../_model/book.model';
 import { BookContentResponse } from '../_model/bookcontentresponse.model';
@@ -27,14 +29,27 @@ export class SubscribedBookComponent implements OnInit {
   content: any;
   unsubscribeMessage: MessageResponse;
   unsubscribeErrorMessage: any;
+  parameter:string;
+  searchSubscriptionForm: FormGroup;
+  subscribedbook: any;
+  subscribedbookError: any;
+  submitted: boolean;
 
-  constructor(private bookService: BookService, private userService: UserService, private sanitizer: DomSanitizer) {
-  
-   }
+  constructor(private bookService: BookService, private userService: UserService,
+     private sanitizer: DomSanitizer, private route: ActivatedRoute) {
+     
+      this.parameter=this.route.snapshot.paramMap.get('id');
+   
+  }
 
   ngOnInit(): void { 
     this.getAllSubscribedBook();
+    this.searchSubscriptionForm = new FormGroup({
+      "subscriptionId": new FormControl("",Validators.required ),
+  });
   }
+  get f() { return this.searchSubscriptionForm.controls; }
+
 
   public getAllSubscribedBook(){
     this.currentUser = this.userService.currentUserValue;
@@ -102,8 +117,22 @@ subscribedBooks.subscribe({
     this.bookService.openBook(this.currentUser.email, subscriptionId).subscribe({
     next:(data:BookContentResponse)=>{this.content=data},
     error:(err)=>{this.content=err}
+    })
+  }
 
-
+  public onSubmitToSearchForSubscription(){
+    this.submitted = true;
+    const formData = {
+      subscriptionId : this.f['subscriptionId'].value,
+    };
+    this.subscribedbook=null;
+    this.subscribedbookError=null;
+    this.bookService.getBookBySubscriptionId(this.currentUser.email,formData.subscriptionId).
+    subscribe({
+      next:(data)=>{console.log("getBookBySubscriptionId "+ data);
+     this.subscribedbook= data},
+      error: (err)=>{console.log("getBookBySubscriptionId "+ err);
+        this.subscribedbookError= err;}
     })
   }
 }

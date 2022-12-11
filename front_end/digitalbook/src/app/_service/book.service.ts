@@ -134,6 +134,10 @@ getBookById(bookId: number) {
   return this.http.get(fetchbookforupdateurl);
 }
 
+getBookBySubscriptionId(emailId:string,subscriptionId: any) {
+  let fetchbookfBySubscriptionIdurl = "http://localhost:8081/digitalbooks/readers/"+emailId+"/books/"+subscriptionId;
+  return this.http.get(fetchbookfBySubscriptionIdurl);
+}
 
 
 }

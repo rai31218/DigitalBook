@@ -14,9 +14,10 @@ export class HeaderComponent implements OnInit {
   userDetailsSubs: Subscription;
   isLoggedInFlag: boolean=false;
  
-  isReaderLoggedIn: boolean;
-  isAuthorLoggedIn: boolean;
+  isReaderLoggedIn: boolean=false;
+  isAuthorLoggedIn: boolean=false;
   currentUser: any;
+  indication="subscription"
   constructor(
     private router: Router,
     private userService: UserService

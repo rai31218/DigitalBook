@@ -154,15 +154,15 @@ public class SubscriptionController {
 		int userId = subscriptionService.getUserIdByEmail(email);
 		Subscription subscription = subscriptionService.fetchSubscriptionById(subscriptionId);
 		if (userId == 0) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(USER_NOT_FOUND));
 		}
 
 		if (subscription == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(SUBSCRIPTION_NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(SUBSCRIPTION_NOT_FOUND));
 		}
 		if (subscription.getUser().getId() != userId) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("The user does not have subscription for this book");
+					.body(new MessageResponse("The user does not have subscription for this book"));
 		} else {
 
 			byte[] logo = restTemplate.getForObject(bookUrl + "subscribed/logo/" + subscription.getBookId(),
@@ -176,7 +176,7 @@ public class SubscriptionController {
 				throw new Exception(ex.getMessage());
 			}
 			if (responseBook == null) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BOOK_NOT_FOUND);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(BOOK_NOT_FOUND));
 			} else {
 				return ResponseEntity.ok(booksWithLogo);
 			}
