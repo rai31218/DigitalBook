@@ -2,10 +2,13 @@ package com.digitalbooks.user.dto;
 
 import java.sql.Blob;
 import java.util.Date;
+import java.util.Optional;
 
 
 public class Books {
 
+	private int id;
+	
 	private String title;
 
 	private String category;
@@ -28,10 +31,11 @@ public class Books {
 	public Books() {
 		super();
 	}
-	public Books(Blob logo, String title, String category, double price, int authorId, String publisher,
+	public Books(int id, String title, String category, double price, int authorId, String publisher,
 			Date publishedDate, boolean active, String content
 			) {
 		super();
+		this.id= id;
 		this.title = title;
 		this.category = category;
 		this.price = price;
@@ -92,13 +96,20 @@ public class Books {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	@Override
 	public String toString() {
-		return "Books [ title=" + title + ", category=" + category + ", price="
-				+ price + ", authorId=" + authorId + ", publisher=" + publisher + ", publishedDate=" + publishedDate
-				+ ", active=" + active + ", content=" + content + "]";
+		return "Books [id=" + id + ", title=" + title + ", category=" + category + ", price=" + price + ", authorId="
+				+ authorId + ", publisher=" + publisher + ", publishedDate=" + publishedDate + ", active=" + active
+				+ ", content=" + content + "]";
 	}
-	
+
 
 
 }

@@ -2,6 +2,7 @@ package com.digitalbooks.book.controller;
 
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class BookServiceController {
 		try {
      	blob = new javax.sql.rowset.serial.SerialBlob(book.getFile());
 			
-		}  catch ( SQLException e) {
+		}  catch ( Exception e) {
 			e.printStackTrace();
 		}
 		return bookService.saveBook(blob, book, authorId);
@@ -69,6 +70,7 @@ public class BookServiceController {
 	public byte[] getBookLogo(@PathVariable("category") String category, @PathVariable("title") String title,
 			@PathVariable("author") int authorId, @PathVariable("price") int price,
 			@PathVariable("publisher") String publisher) {
+		System.out.println("here");
 		return bookService.getBookForLogo(category, title, authorId, price, publisher);
 
 	}
@@ -78,7 +80,8 @@ public class BookServiceController {
 	public Books getBook(@PathVariable("category") String category, @PathVariable("title") String title,
 			@PathVariable("author") int authorId, @PathVariable("price") int price,
 			@PathVariable("publisher") String publisher) {
-		return bookService.getBookForSearch(category, title, authorId, price, publisher);
+		Books book= bookService.getBookForSearch(category, title, authorId, price, publisher);
+		return book ;
 
 	}
 
@@ -125,5 +128,37 @@ public class BookServiceController {
 
 		}
 	}
+	
+	
+	
+	@GetMapping("searchBook/count/book/{user-id}")
+	public int getCountofWrittenBook(@PathVariable("user-id") int userId) {
+		return bookService.getCount(userId);
+		
+	}
+	@GetMapping("searchBook/createdbook/logo/{user-id}")
+	public byte[][] getBookLogoForCreatedBook(@PathVariable("user-id") int userId) {
+		return  bookService.getCreatedBookForLogo(userId);
+
+	}
+
+	@GetMapping("searchBook/createdbook/{user-id}")
+
+	public List<Books> getBookForCreatedBook(@PathVariable("user-id") int userId) {
+		return bookService.getCreatedBook(userId);
+	}
+	
+	
+	@GetMapping("searchBook/logo/{book-id}")
+	public byte[] getBookLogoForUpdation(@PathVariable("book-id") int bookId) {
+		return  bookService.getBookLogoForUpdation(bookId);
+
+	}
+	
+	@GetMapping("searchBook/{book-id}")
+	public Books getBookForUpdation(@PathVariable("book-id") int bookId) {
+		return bookService.getBookForUpdation(bookId);
+	}
+	
 
 }

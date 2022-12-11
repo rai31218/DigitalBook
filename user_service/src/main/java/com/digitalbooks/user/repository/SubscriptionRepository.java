@@ -23,5 +23,10 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Stri
 
 
 	public Subscription findByBookIdAndUser(int bookId, Users user);
+	
+	
+
+	@Query(value = "Select S.ID, S.USER_FID, S.BOOK_ID, S.DATE_OF_SUBSCRIPTION, S.CANCELLED, S.DATE_OF_CANCEL from Subscription S where S.USER_FID=:userId and S.BOOK_ID=:bookId and cancelled=0",nativeQuery=true)
+	public Optional<List<Subscription>> searchSubscriptionIdByBookIdAndUserId(int userId, int bookId);
 
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.digitalbooks.user.payload.response.MessageResponse;
 import com.digitalbooks.user.pyload.request.SubscriptionPayLoad;
 import com.digitalbooks.user.service.SubscriptionService;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/digitalbooks")
 public class SubscriptionController {
@@ -84,6 +86,21 @@ public class SubscriptionController {
 
 	}
 
+	
+	/**Get Subscription ID for front end**/
+	@GetMapping("readers/{user-id}/{book-id}")
+	public ResponseEntity<?> getSubscriptionId(@PathVariable("user-id") int userId, 
+		@PathVariable("book-id") int bookId) {
+		 Optional<List<Subscription>> id =subscriptionService.fetchSubscriptionIdByBookIdAndUserId(userId, bookId);
+		 return ResponseEntity.ok(id.get().get(0));
+	}
+	
+	
+	
+	
+	
+	
+	
 	/** Reader can fetch all subscribed books **/
 
 	@GetMapping("readers/{emailId}/books")

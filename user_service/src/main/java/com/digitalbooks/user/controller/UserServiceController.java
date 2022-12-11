@@ -2,14 +2,17 @@ package com.digitalbooks.user.controller;
 
 import java.io.IOException;
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,18 +36,27 @@ import org.springframework.web.multipart.MultipartFile;
 import com.digitalbooks.user.dto.Books;
 import com.digitalbooks.user.dto.BooksWithByteFile;
 import com.digitalbooks.user.dto.BooksWithLogo;
+import com.digitalbooks.user.dto.BooksWithMultipartFile;
 import com.digitalbooks.user.jwt.AuthRequest;
 import com.digitalbooks.user.jwt.JwtResponse;
 import com.digitalbooks.user.jwt.JwtUtil;
 import com.digitalbooks.user.jwt.UserDetailsImpl;
+import com.digitalbooks.user.model.Subscription;
 import com.digitalbooks.user.model.Users;
 import com.digitalbooks.user.payload.response.MessageResponse;
 import com.digitalbooks.user.service.UserService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(value = "/digitalbooks")
 public class UserServiceController {
 
+	@Value("${spring.datasource.url}")
+	 private  String server;
+	
+	MultipartFile file;
+	byte[] byteslogo;
+	
 	@Autowired
 	private JwtUtil jwtUtil;
 	@Autowired
@@ -61,29 +74,55 @@ public class UserServiceController {
 	String bookUrl = "http://localhost:8082/digitalbooks/searchBook/";
 	String createBook= "http://localhost:8082/digitalbooks/author/";
 	
+	
+	public static final String USER_NOT_FOUND = "User is not found";
+	public static final String BOOK_NOT_FOUND = "No book is available for current selection";
+	public static final String SUBSCRIPTION_NOT_FOUND ="Subscription is not found";
+	
 	@GetMapping("/test")
 	public String test() {
-		return "It is User Service";
-	}
+		System.out.println("Server:c"+server);
+
+		return "It is User Service "+server ;
+			}
 
 	
-	@PostMapping("/author/{author-id}/books")
-    public ResponseEntity<?> saveBook(@RequestParam(value="file", required=false) MultipartFile file,
-    		@ModelAttribute Books book,
+	@PostMapping(value="/uploadlogo")
+	public void uploadLogo(@RequestParam("file") MultipartFile file) throws IOException {
+		//this.file=file;	
+		try {
+			//BooksWithMultipartFile book =(BooksWithMultipartFile) bookLogo;
+			if (file != null) {
+				this.byteslogo = file.getBytes();
+		         
+			}
+		} catch (Exception e) {
+		//	e.printStackTrace();
+			throw new IOException(e.getMessage()); ///sonar
+		} 
+		
+		
+	}
+	@PostMapping(value="/author/{author-id}/books", consumes = { "application/json" })
+    public ResponseEntity<?> saveBook(
+    		//@RequestParam(value="file", required=false) MultipartFile file,
+    		@RequestBody Books book, 
     		@PathVariable("author-id") int authorId) throws IOException {
 		
 		boolean isUserAuthor = userService.checkAuthorExists(authorId);
 		if(isUserAuthor) {
-			byte[] bytes = null;
-			try {
-				
-				if (file != null) {
-					bytes = file.getBytes();
-			         
-				}
-			} catch (IOException e) {
-				throw new IOException(e.getMessage()); ///sonar
-			} 
+			byte[] bytes = this.byteslogo;
+			
+//			try {
+//				//BooksWithMultipartFile book =(BooksWithMultipartFile) bookLogo;
+//				if (this.file != null) {
+//					bytes = this.file.getBytes();
+//			         
+//				}
+//			} catch (Exception e) {
+//			//	e.printStackTrace();
+//				throw new IOException(e.getMessage()); ///sonar
+//			} 
 			BooksWithByteFile booksWithLogo = new BooksWithByteFile();
 			booksWithLogo.setFile(bytes);
 			booksWithLogo.setBooks(book);
@@ -105,22 +144,23 @@ public class UserServiceController {
 	}
 		
 	@PostMapping("/author/{author-id}/books/{book-id}")
-	public ResponseEntity<?> updateBook(@RequestParam(value="file", required=false) MultipartFile file,
-    		@ModelAttribute Books book,
+	public ResponseEntity<?> updateBook(
+    		@RequestBody Books book,
     		@PathVariable("author-id") int authorId,
     		@PathVariable("book-id") int bookId) throws Exception {
 		boolean isUserAuthor = userService.checkAuthorExists(authorId);
 		if(isUserAuthor) {
-			byte[] bytes = null;
-			try {
-				
-				if (file != null) {
-					bytes = file.getBytes();
-			         
-				}
-			} catch (IOException e) {
-				throw new IOException(e.getMessage()); ///sonar
-			} 
+			byte[] bytes = this.byteslogo;
+		//	byte[] bytes = null;
+//			try {
+//				
+//				if (file != null) {
+//					bytes = file.getBytes();
+//			         
+//				}
+//			} catch (IOException e) {
+//				throw new IOException(e.getMessage()); ///sonar
+//			} 
 			BooksWithByteFile booksWithLogo = new BooksWithByteFile();
 			booksWithLogo.setFile(bytes);
 			booksWithLogo.setBooks(book);
@@ -146,6 +186,7 @@ public class UserServiceController {
 	public ResponseEntity<?> generateToken(@RequestBody AuthRequest authRequest,
 			HttpServletResponse httpServletResponse, HttpSession session) throws Exception {
 		try {
+			System.out.println(authRequest.getUserName() + " and "+ authRequest.getPassword());
 			Authentication authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword()));
 
@@ -185,7 +226,7 @@ public class UserServiceController {
 			@RequestParam("author") String author, @RequestParam("price") String price,
 			@RequestParam("publisher") String publisher) throws Exception {
 
-		Books responseBook = null;
+		Books responseBook = new Books();
 		BooksWithLogo booksWithLogo = null;
 		int authoId = userService.findByUserName(author);
 		byte[] logo = restTemplate.getForObject(
@@ -200,7 +241,7 @@ public class UserServiceController {
 			throw new Exception(ex.getMessage());
 		}
 		if (responseBook == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No book is available for current selection");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("No book is available for current selection"));
 		} else {
 			return ResponseEntity.ok(booksWithLogo);
 		}
@@ -209,9 +250,83 @@ public class UserServiceController {
 	
 	@PutMapping("author/{author-id}/books/{book-id}")
 	public ResponseEntity<?> blockBook(@PathVariable("author-id") int userId, @PathVariable("book-id") int bookId, @RequestParam("block") String block) {
-	 return restTemplate.getForEntity(bookUrl+"cancel/"+userId+"/"+bookId+"/"+block , MessageResponse.class);
-		
-		
+	 return restTemplate.getForEntity(bookUrl+"cancel/"+userId+"/"+bookId+"/"+block , MessageResponse.class);		
+	}
+	
+	/**fetch book for update
+	 * @throws Exception **/
+	@GetMapping("book/{book-id}")
+	public ResponseEntity<?> fetchBookForUpdate(@PathVariable("book-id") int bookId) throws Exception {
+		Books responseBook = new Books();
+		BooksWithLogo booksWithLogo = null;
+		byte[] logo = restTemplate.getForObject(
+				bookUrl+"/logo/"+bookId,
+				byte[].class);
+		responseBook = restTemplate.getForObject(
+				bookUrl+bookId, Books.class);
+		try {
+			Blob blob = userService.fetchBlob(logo);
+			booksWithLogo = new BooksWithLogo(blob, responseBook);
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage());
+		}
+		if (responseBook == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No book is available for current selection");
+		} else {
+			return ResponseEntity.ok(booksWithLogo);
+		}
+	 //return restTemplate.getForEntity(bookUrl+bookId, BooksWithLogo.class);		
+	}
+	
+	
+	
+	/**Get all createdbook of an user for front end
+	 * @throws Exception **/
+	@GetMapping("createdbook/{user-id}")
+	public ResponseEntity<?> getSubscriptionId(@PathVariable("user-id") int user) throws Exception {
+
+		Books[] responseBook = null;
+		BooksWithLogo booksWithLogo = null;
+
+		boolean userId = userService.checkAuthorExists(user);
+		if (!userId) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
+		} else {
+			//Optional<List<Subscription>> subscriptionList = userService.fetchSubscribedBooksForUser(userId);
+			List<BooksWithLogo> listofBooks = new ArrayList<>();
+			//int count= restTemplate.getForObject(bookUrl + "count/book"+user , Integer.class);
+		//	if (!subscriptionList.isEmpty() && !subscriptionList.get().isEmpty()) {
+				//for (int i = 0; i < count; i++) {
+				//	int bookId = subscriptionList.get().get(i).getBookId();
+
+					byte[] logo[] = restTemplate.getForObject(bookUrl + "createdbook/logo/" + user, byte[][].class);
+					responseBook = restTemplate.getForObject(bookUrl + "createdbook/" + user, Books[].class);
+
+					try {
+						for(int i=0 ;i <responseBook.length;i++) {
+							Blob blob = userService.fetchBlob(logo[i]);
+							booksWithLogo = new BooksWithLogo(blob, responseBook[i]);
+							listofBooks.add(booksWithLogo);
+						}
+						
+					} catch (Exception ex) {
+						throw new Exception(ex.getMessage());
+					}
+					if (responseBook == null) {
+						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BOOK_NOT_FOUND);
+					}
+			//	}
+
+				return ResponseEntity.ok(listofBooks);
+			//}
+
+//			else {
+//				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No subscription found");
+//			}
+
+		}
+
+	
 	}
 
 }

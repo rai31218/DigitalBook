@@ -1,7 +1,7 @@
 import { User } from "./user.model";
 
 export class Subscription {
-    public id:number;
+    public id:string;
     public user:User;
      public bookId:number;
      public dateOfSubscription:Date;

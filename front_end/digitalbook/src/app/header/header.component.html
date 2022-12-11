@@ -1,0 +1,47 @@
+<div class="sticky-top mb-3">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-danger justify-content-center p-3 mb-3"
+      *ngIf="!isLoggedInFlag">
+      <a routerLink="#" class="navbar-brand"
+        ><span class="h3">Digital Book</span></a>
+
+        <a routerLink="/signup" class="navbar-brand justify-content-right"
+        ><span class="h5">Sign Up</span></a>
+        <a routerLink="/signin" class="navbar-brand justify-content-right"
+        ><span class="h5">Sign In</span></a>
+    </nav>
+    <nav
+      class="navbar navbar-expand navbar-dark bg-danger p-3 mb-5"
+      *ngIf="isLoggedInFlag && isAuthorLoggedIn">
+      <a routerLink="#" class="navbar-brand"><span class="h5">Digital Book</span></a>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/createbooks">Create Book</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/createdbooks">Your Books</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"  routerLink="#" (click)="logout()">Logout</a>
+        </li>
+      </ul>
+    </nav>
+    <nav
+      class="navbar navbar-expand navbar-dark bg-danger p-3 mb-5"
+      *ngIf="isLoggedInFlag && isReaderLoggedIn">
+      <a routerLink="#" class="navbar-brand"><span class="h5">Digital Book</span></a>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/">Search Book</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/subescribedbooks">Your Subscribed Books</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="logout()">Logout</a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+  

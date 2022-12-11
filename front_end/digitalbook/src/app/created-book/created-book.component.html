@@ -1,0 +1,145 @@
+<p>created-book works!</p>
+
+
+<div class="container mb-4">
+    <div class="row">
+      <div class="col-md-6 mx-auto mt-3 pt-5" *ngIf="!isUpdate">
+        <div class="card shadow-lg rounded border-danger">
+          <div class="card-header text-center text-center bg-danger text-white">
+            <h1>Created Book</h1>
+          </div>
+          <div class="card-body">
+           
+             <table>
+                <tbody *ngFor="let createdBook of createdBookList; let i= index" style="background-color: white; ">
+                    <tr >
+                        <p style="word-wrap: break-word;"> <img id="myimage" [src]='thumbnail[i]' style="height: 50px;" /></p>
+                        <p style="word-wrap: break-word; font-weight: bold;">Book: {{createdBook.title}}</p>
+                        <span style="word-wrap: break-word;">Category : {{createdBook.category}}</span>&nbsp;
+                        <span style="word-wrap: break-word;">Publiher : {{createdBook.publisher}}</span>
+
+                    <br/>
+                        <span style="word-wrap: break-word;" *ngIf="createdBook.active"><button 
+                          (click)="block(createdBook.id, createdBook.active)" class="btn btn-primary">Block</button>
+                        </span>
+                        <span style="word-wrap: break-word;" *ngIf="!createdBook.active">
+                          <button  *ngIf="!createdBook.active" (click)="block(createdBook.id, createdBook.active)" class="btn btn-primary">UnBlock</button>
+                        </span> &nbsp;
+                        <span style="word-wrap: break-word;"><button (click)="update(createdBook.id)" class="btn btn-primary">Update</button></span>
+                        </tr>
+                        <hr/>
+
+                </tbody>
+
+             </table>
+              
+         
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="isUpdate">
+    <div class="container mb-4">
+        <div class="row">
+          <div class="col-md-6 mx-auto mt-3 pt-5">
+            <div class="card shadow-lg rounded border-info">
+              <div class="card-header text-center text-center bg-info text-white">
+                <h1>Update Book {{isUpdate}}</h1>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="updateBookForm" (submit)="onSubmitToUpdate()">
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input type='file'  (change)="onChange($event)"
+                        formControlName="logo" class='form-control' [ngClass]="{ 'is-invalid': submittedForCreation && f1['logo'].errors }" required placeholder="Logo of the book" />
+                        <div *ngIf="submittedForCreation && f1['logo'].errors" class="invalid-feedback">
+                          <div *ngIf="f1['logo'].errors['required']">Logo is required</div>
+                      </div>
+                      </div>
+    
+                    <div class="col-sm-6">
+                        <input type='text'
+                        formControlName="category" class='form-control' [ngClass]="{ 'is-invalid': submittedForCreation && f1['category'].errors }" 
+                        required placeholder="Category of the book" 
+                        value="updatableValue.books.category"/>
+                        <div *ngIf="submittedForCreation && f1['category'].errors" class="invalid-feedback">
+                          <div *ngIf="f1['category'].errors['required']">Category is required</div>
+                      </div>
+                      </div>
+                    <div class="col-sm-6">
+                        <input type='text'
+                        formControlName="title" class='form-control' [ngClass]="{ 'is-invalid': submittedForCreation && f1['title'].errors }" required placeholder="Title of the book" />
+                        <div *ngIf="submittedForCreation && f1['title'].errors" class="invalid-feedback">
+                          <div *ngIf="f1['title'].errors['required']">Tilte is required</div>
+                      </div>
+                    </div>
+                    <!-- <div class="col-sm-6">
+                      <input type="text" formControlName="author" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['author'].errors }" placeholder="Author of the book">
+                      <div *ngIf="submitted && f['author'].errors" class="invalid-feedback">
+                        <div *ngIf="f['author'].errors['required']">Author name is required</div>
+                    </div>
+                    </div> -->
+                  </div>
+                  <div class="form-group">
+                    <div>
+                        <input type='text' formControlName="publisher" class='form-control' [ngClass]="{ 'is-invalid': submittedForCreation && f1['publisher'].errors }" required placeholder="Publisher of the book"/>
+                        <div *ngIf="submittedForCreation && f1['publisher'].errors" class="invalid-feedback">
+                          <div *ngIf="f1['publisher'].errors['required']">Publisher is required</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                      <input type='number' formControlName="price" class='form-control' [ngClass]="{ 'is-invalid': submittedForCreation && f1['price'].errors }" required placeholder="Price of the book"/>
+                      <div *ngIf="submittedForCreation && f1['price'].errors" class="invalid-feedback">
+                        <div *ngIf="f1['price'].errors['required']">Price is required</div>
+                       
+                    </div>
+                    </div>
+                  </div>
+                  <!-- <div class="col-sm-6">
+                    
+                    <select formControlName="active" class="form-control"  [ngClass]="{ 'is-invalid': submittedForCreation && f1['active'].errors }" placeholder="Status of the book">  
+                         
+                        <option value="1"  [selected] ="isActive">Active</option>  
+                        <option  value="0"  [selected] ="!isActive">Inactive</option>   
+                    </select>  
+                    <div *ngIf="submittedForCreation && f1['active'].errors" class="invalid-feedback">
+                      <div *ngIf="f1['active'].errors['required']">Status is required</div>
+                  </div>
+                  </div>  -->
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                      <input type='textarea' formControlName="content" class='form-control' [ngClass]="{ 'is-invalid': submittedForCreation && f1['content'].errors }" required placeholder="Content of the book"/>
+                      <div *ngIf="submittedForCreation && f1['content'].errors" class="invalid-feedback">
+                        <div *ngIf="f1['content'].errors['required']">Content is required</div>
+                       
+                    </div>
+                    </div>
+                  </div>
+                  <div>
+                    <input type='hidden' formControlName="bookId" class='form-control'  />
+                      
+
+                  </div>
+    
+    
+                  <div class="row">
+                    <div class="col-sm-5 mx-auto">
+                        <input type="submit" [disabled]="loading" class='btn btn-outline-primary btn-block btn-lg' value='Update' id='search'  />
+                    </div>
+                    {{createstatus}}
+    
+                  </div>
+                  <div class="row">
+                  </div>  
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>

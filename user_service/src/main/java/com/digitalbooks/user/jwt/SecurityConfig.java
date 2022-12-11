@@ -87,10 +87,10 @@ public class SecurityConfig  {
 //        
         
  
-    	
+    	http.cors();
     	
         http.csrf().disable()
-         .cors().disable()
+        // .cors().disable()
         .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
          .authorizeHttpRequests().antMatchers("/digitalbooks/sign-in").permitAll()
          .antMatchers("/digitalbooks/sign-up").permitAll()

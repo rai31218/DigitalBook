@@ -4,6 +4,7 @@ package com.digitalbooks.book.service;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -175,6 +176,54 @@ public class BookService {
 		
 		return savedBook;
 		
+	}
+
+	public byte[][] getCreatedBookForLogo(int userId) {
+		byte[] byteArray[] = new byte[1000][];
+		try {
+			Optional<List<Books>> book =	bookRepository.findByAuthorId(userId);
+			if(book.isEmpty()) {
+				byteArray=null;
+			}
+			else {
+				System.out.println("length: "+byteArray.length);
+				for(int i=0; i<book.get().size();i++) {
+					byteArray[i]=book.get().get(i).getLogo().getBytes(1, (int)book.get().get(i).getLogo().length());
+				}
+			}
+			
+		//	byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return byteArray;
+	}
+
+	public List<Books> getCreatedBook(int userId) {
+		Optional<List<Books>> book =	bookRepository.findByAuthorId(userId);
+		return book.isEmpty()?null:book.get();
+	}
+
+	public int getCount(int userId) {
+		return bookRepository.fetchCountOfBooks(userId);
+		
+	}
+	
+	public byte[] getBookLogoForUpdation(int bookId) {
+
+		byte[] byteArray = null;
+		try {
+			Optional<Books> book =	bookRepository.findById(bookId);
+			byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return byteArray;
+	}
+
+	public Books getBookForUpdation(int bookId) {
+		
+		return bookRepository.findById(bookId).get();
 	}
 
 

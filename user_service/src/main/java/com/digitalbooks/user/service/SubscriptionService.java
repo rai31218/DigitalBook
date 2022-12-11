@@ -157,8 +157,12 @@ public class SubscriptionService {
 		}
 		else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("NO Subscription is found"));
-		}
-		
+		}	
+	}
+
+
+	public Optional<List<Subscription>> fetchSubscriptionIdByBookIdAndUserId(int userId, int bookId) {
+		return subscriptionRepository.searchSubscriptionIdByBookIdAndUserId(userId, bookId);
 		
 	}
 

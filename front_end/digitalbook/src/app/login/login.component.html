@@ -1,0 +1,73 @@
+<div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="card shadow-lg rounded border-danger mt-5 mb-5">
+          <div class="card-header text-center bg-danger text-white">
+            <h1>Signin</h1>
+          </div>
+          <div class="card-body mb-5">
+            <div class="row">
+              <div class="col-md-7 border-right">
+                <form [formGroup]="loginForm" (submit)="onSubmit()">
+                  <div class="form-group">
+                    <label for="userName">Username</label>
+                    <input
+                      type="text"
+                      formControlName="userName"
+                      class="form-control form-control-lg"
+                      [ngClass]="{ 'is-invalid': submitted && f['userName'].errors }"
+                      placeholder="Enter username"
+                      required
+                    />
+                    <div
+                      *ngIf="submitted && f['userName'].errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f['username'].errors['required']">
+                        Username is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="pass">Password</label>
+                    <input
+                      type="password"
+                      formControlName="password"
+                      class="form-control form-control-lg"
+                      [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+                      placeholder="Enter Password"
+                      pattern=".{3,}"
+                      title="Min 3 characters"
+                      required
+                    />
+                    <div
+                      *ngIf="submitted && f['password'].errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f['password'].errors['required']">
+                        Password is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 offset-md-3">
+                    <input
+                      type="submit"
+                      class="btn btn-outline-primary btn-lg btn-block shadow-sm"
+                      value="Signin"
+                      id="login"
+                      [disabled]="loading"
+                    />
+                    
+                  </div>
+                </form>
+              </div>
+              <div>
+                <p>{{loginErrorMessage}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
