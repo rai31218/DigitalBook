@@ -11,7 +11,7 @@ import { SubscriptionPayLoad } from '../_model/subscriptionpayload.model';
 
 
 
-
+const commonURl="http://localhost:8081/digitalbooks/"
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +25,7 @@ export class BookService {
 
 
  public getSeachedBooks(category:string, title:string, author:string, price:number,publisher:string ){
-  let url = "http://localhost:8081/digitalbooks/searchBook"
+  let url = commonURl+"searchBook"
   url=url+"?category="+category+"&title="+title+"&author="+author+"&price="+price+"&publisher="+publisher;
  console.log("url: "+url)
   return this.http.get(url);
@@ -36,7 +36,7 @@ export class BookService {
  public createBooks(logo:File, category:string, title:string, authorId:number, price:number,
   publisher:string, active:boolean, content:string)
 {
-  let savebookurl= "http://localhost:8081/digitalbooks/author"
+  let savebookurl=commonURl+"author"
   console.log("Ami create a")
   const formdata: FormData = new FormData(); 
   const bookInfo:Book = {
@@ -55,7 +55,7 @@ export class BookService {
 public updateBooks(logo:File, category:string, title:string, authorId:number, price:number,
   publisher:string, active:boolean, content:string, bookId:number)
 {
-  let updatebookurl= "http://localhost:8081/digitalbooks/author"
+  let updatebookurl= commonURl+"author"
   console.log("Ami create a")
   const formdata: FormData = new FormData(); 
   const bookInfo:Book = {
@@ -71,7 +71,7 @@ public updateBooks(logo:File, category:string, title:string, authorId:number, pr
 }
 
   public uploadlogo(logo:File) {
-    let uploadlogourl="http://localhost:8081/digitalbooks/uploadlogo"
+    let uploadlogourl=commonURl+"uploadlogo"
     console.log("Ami upload a")
     const formdata: FormData = new FormData();  
     formdata.append('file',logo);
@@ -79,7 +79,7 @@ public updateBooks(logo:File, category:string, title:string, authorId:number, pr
   }
 
   public subscribe(bookId: number) {
-    let subscriptionurl = "http://localhost:8081/digitalbooks/";
+    let subscriptionurl = commonURl;
     let subcribe:SubscriptionPayLoad ={
       bookId:bookId,
       email: this.currentUser.email
@@ -92,7 +92,7 @@ public updateBooks(logo:File, category:string, title:string, authorId:number, pr
 
   public getAllSubscribedBook(email: string) {
 
-    let subscribedvbookurl = "http://localhost:8081/digitalbooks/readers/";
+    let subscribedvbookurl = commonURl+"readers/";
     return this.http.get(subscribedvbookurl+email+"/books");
     
   }
@@ -100,7 +100,7 @@ public updateBooks(logo:File, category:string, title:string, authorId:number, pr
 
   public getSubscriptionIdOfEachBook(userId:number, bookId:number){
     
-let subscribedvbookurl = "http://localhost:8081/digitalbooks/readers/";
+let subscribedvbookurl = commonURl+"readers/";
     subscribedvbookurl=subscribedvbookurl+userId+"/"+bookId;
    console.log("url: "+subscribedvbookurl)
     return this.http.get(subscribedvbookurl);
@@ -108,34 +108,34 @@ let subscribedvbookurl = "http://localhost:8081/digitalbooks/readers/";
   
    }
   public unsubscribe(email:string, subscriptionId: number) {
-    let subscribedvbookurl = "http://localhost:8081/digitalbooks/readers/"+email+"/books/"+subscriptionId+"/cancel-subscription"
+    let subscribedvbookurl = commonURl+"readers/"+email+"/books/"+subscriptionId+"/cancel-subscription"
     return this.http.put(subscribedvbookurl, null);
   }
 
 
   public openBook(email:string,subscriptionId: string) {
-    let subscribedvbookurl = "http://localhost:8081/digitalbooks/readers/"+email+"/books/"+subscriptionId+"/read"
+    let subscribedvbookurl = commonURl+"readers/"+email+"/books/"+subscriptionId+"/read"
     return this.http.get(subscribedvbookurl);
   }
 
   public getAllCreatedBook(authorId: number) {
-    let createdbookurl = "http://localhost:8081/digitalbooks/createdbook/"+authorId;
+    let createdbookurl = commonURl+"createdbook/"+authorId;
     return this.http.get(createdbookurl);
 }
 
 public blockBook(userId: number, bookId: number, active:string) {
-  let blockbookurl = "http://localhost:8081/digitalbooks/author/"+userId+"/books/"+bookId+"?block="+active;
+  let blockbookurl = commonURl+"author/"+userId+"/books/"+bookId+"?block="+active;
   console.log(blockbookurl)
   return this.http.put(blockbookurl, null);
 }
 
 getBookById(bookId: number) {
-  let fetchbookforupdateurl = "http://localhost:8081/digitalbooks/book/"+bookId;
+  let fetchbookforupdateurl = commonURl+"book/"+bookId;
   return this.http.get(fetchbookforupdateurl);
 }
 
 getBookBySubscriptionId(emailId:string,subscriptionId: any) {
-  let fetchbookfBySubscriptionIdurl = "http://localhost:8081/digitalbooks/readers/"+emailId+"/books/"+subscriptionId;
+  let fetchbookfBySubscriptionIdurl = commonURl+"readers/"+emailId+"/books/"+subscriptionId;
   return this.http.get(fetchbookfBySubscriptionIdurl);
 }
 

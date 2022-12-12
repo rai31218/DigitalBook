@@ -6,9 +6,9 @@ import { map } from 'rxjs/operators';
 import { User } from '../_model/user.model';
 import { Role } from '../_model/role.model';
 
-
-const url = "http://localhost:8081/digitalbooks/sign-up"
-const urlSignIn = "http://localhost:8081/digitalbooks/sign-in"
+const commonUrl="http://localhost:8081/digitalbooks/";
+const url = commonUrl+"sign-up";
+const urlSignIn = commonUrl+"sign-in"
 @Injectable({
   providedIn: 'root'
 })

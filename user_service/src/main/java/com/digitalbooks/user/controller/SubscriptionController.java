@@ -152,7 +152,7 @@ public class SubscriptionController {
 		Books responseBook = null;
 		BooksWithLogo booksWithLogo = null;
 		int userId = subscriptionService.getUserIdByEmail(email);
-		Subscription subscription = subscriptionService.fetchSubscriptionById(subscriptionId);
+		Subscription subscription = subscriptionService.fetchSubscriptionById(subscriptionId.trim());
 		if (userId == 0) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(USER_NOT_FOUND));
 		}
