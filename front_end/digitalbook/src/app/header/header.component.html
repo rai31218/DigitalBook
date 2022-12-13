@@ -21,10 +21,12 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/createdbooks">Your Books</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ">
           <a class="nav-link"  routerLink="#" (click)="logout()">Logout</a>
-        </li>
+        </li>    
       </ul>
+      <p class="ms-auto" style="color: white;">Hi, {{userName}}</p>
+
     </nav>
     <nav
       class="navbar navbar-expand navbar-dark bg-primary p-3 mb-5"
@@ -44,6 +46,8 @@
           <a class="nav-link" (click)="logout()">Logout</a>
         </li>
       </ul>
+      <p class="ms-auto" style="color: white;">Hi, {{userName}}</p>
+      
     </nav>
 
   </div>

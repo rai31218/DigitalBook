@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   isAuthorLoggedIn: boolean=false;
   currentUser: any;
   indication="subscription"
+  userName: string;
   constructor(
     private router: Router,
     private userService: UserService
@@ -34,9 +35,11 @@ export class HeaderComponent implements OnInit {
            console.log(x.roles+"-----------------");
            if(x.roles[0]=="Author"){
             this.isAuthorLoggedIn=true;
+            this.userName=x.username;
            }
            if(x.roles[0]=="Reader"){
             this.isReaderLoggedIn=true;
+            this.userName=x.username;
            }
 
            
