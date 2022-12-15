@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -18,10 +19,12 @@ public class Subscription {
 	@Id
 	private String id;
 	
+	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "USER_FID")
 	private Users user;
 	
+	@NotNull
 	@Column(name="BOOK_ID")
 	private int bookId;
 	

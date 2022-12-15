@@ -61,12 +61,24 @@ public class SubscriptionService {
 
 	public boolean checkduplicateSubscription(int bookId, SubscriptionPayLoad subscribe) {
 		Users user =userRepository.findByEmail(subscribe.getEmail());
-		Subscription subscription = subscriptionRepository.findByBookIdAndUser(bookId,user);
+		List<Subscription> subscription = subscriptionRepository.findByBookIdAndUser(bookId,user);
 		boolean isDuplicate = false;
 		
-		if(subscription!=null && subscription.getUser().getId()==user.getId() &&  subscription.getBookId()==bookId
-				&& !subscription.isCancelled()) {
-			isDuplicate=true;
+//		if(subscription!=null && subscription.getUser().getId()==user.getId() &&  subscription.getBookId()==bookId
+//				&& !subscription.isCancelled()) {
+//			isDuplicate=true;
+//		}
+//		if(subscription!=null && subscription.getUser().getId()==user.getId() &&  subscription.getBookId()==bookId
+//				&& !subscription.isCancelled()) {
+//			isDuplicate=true;
+//		}
+		if(subscription.size()>0 ) {
+			for(int i =0 ; i<subscription.size();i++) {
+				if(!subscription.get(i).isCancelled()) {
+					isDuplicate=true;
+					break;
+				}
+			}
 		}
 		 
 		return isDuplicate;
@@ -163,6 +175,16 @@ public class SubscriptionService {
 
 	public Optional<List<Subscription>> fetchSubscriptionIdByBookIdAndUserId(int userId, int bookId) {
 		return subscriptionRepository.searchSubscriptionIdByBookIdAndUserId(userId, bookId);
+		
+	}
+
+
+	public String getUserNameByUserIdFromBookObject(int authorId) {
+		Optional<Users> user = userRepository.findById(authorId);
+		if(user.isPresent()) {
+			return user.get().getUserName();
+		}
+		return "";
 		
 	}
 

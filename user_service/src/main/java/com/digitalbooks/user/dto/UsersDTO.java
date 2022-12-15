@@ -1,53 +1,29 @@
-package com.digitalbooks.user.model;
+package com.digitalbooks.user.dto;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name="USERS")
-public class Users {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="ID")
+public class UsersDTO {
+
 	private int id;
-	
-	@NotNull
-	@Column(name="USERNAME")
+
 	private String userName;
-	
-	@NotNull
-	@Column(name="PASSWORD")
+
 	private String password;
-	
-	@NotNull
-	@Column(name="EMAIL")
+
 	private String email;
-	
-	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ROLE_FID")
-	private Roles roles;
-	
-	@Column(name="CREATED_DATE")
+
+	private RolesDTO roles;
+
 	private Date createdDate;
 	
 	
 	
-	public Users() {
+	public UsersDTO() {
 		
 	}
-	public Users(int id, String userName, String password, String email, Roles roles, Date createdDate) {
+	public UsersDTO(int id, String userName, String password, String email, RolesDTO roles, Date createdDate) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -56,7 +32,7 @@ public class Users {
 		this.roles = roles;
 		this.createdDate = createdDate;
 	}
-	public Users(String userName, String email, String password) {
+	public UsersDTO(String userName, String email, String password) {
 		this.userName = userName;
 		this.password = password;
 		this.email = email;
@@ -90,10 +66,10 @@ public class Users {
 	}
 	
 	
-	public Roles getRoles() {
+	public RolesDTO getRoles() {
 		return roles;
 	}
-	public void setRoles(Roles roles) {
+	public void setRoles(RolesDTO roles) {
 		this.roles = roles;
 	}
 	

@@ -1,8 +1,8 @@
 <!-- <p>subscribed-book works! </p> -->
 
-<div class="container mb-4">
+<div class="container mb-6">
     <div class="row">
-      <div class="col-md-6 mx-auto mt-3 pt-5" *ngIf="!isOpenBook && parameter!='subscription'">
+      <div class="col-md-8 mx-auto mt-3 pt-5" *ngIf="!isOpenBook && parameter!='subscription'">
         <div class="card shadow-lg rounded border-danger">
           <div class="card-header text-center text-center bg-info text-white">
             <h1>Subscribed Books</h1>
@@ -12,10 +12,10 @@
              <table>
                 <tbody *ngFor="let subscribeBook of subscribeBookList; let i= index" style="background-color: white; ">
                     <tr >
-                        <p style="word-wrap: break-word;"> <img id="myimage" [src]='thumbnail[i]' style="height: 50px;" /></p> 
-                        <p style="word-wrap: break-word; font-weight: bold;" (click)="openBook(subdIdList[i].id)">Book: {{subscribeBook.title}}</p>
-                        <span style="word-wrap: break-word;">Category : {{subscribeBook.category}}</span> &nbsp;
-                        <span style="word-wrap: break-word;">Author : {{subscribeBook.authorId}}</span>
+                        <p style="word-wrap: break-word;"> <img id="myimage" [src]='thumbnail[i]' style="height: 100px; width: 100px;" /></p> 
+                        <p style="word-wrap: break-word; font-weight: bold;" (click)="openBook(subdIdList[i].id)">Book: {{subscribeBook.books.title}}</p>
+                        <span style="word-wrap: break-word;">Category : {{subscribeBook.books.category}}</span> &nbsp;
+                        <span style="word-wrap: break-word;">Author : {{subscribeBook.userName}}</span>
 
                         <br/>
                         <span style="word-wrap: break-word;"><button (click)="unsubscribe(subdIdList[i].id)"  class="btn btn-primary">Unsubscribe</button>
@@ -41,13 +41,13 @@
         <div class="card-body">   
            <table>
               <tbody style="background-color: white; ">
-                  <tr *ngIf="content.err===undefined">
-                      <p style="word-wrap: break-word; font-weight: bold;" >{{content.title}}</p>
+                  <tr *ngIf="contentError===undefined">
+                      <p style="word-wrap: break-word; font-weight: bold; font-size: 30px;" >{{content.title}}</p>
                       <hr/>
-                      <p style="word-wrap: break-word;">{{content.content}}</p>
+                      <p style="word-wrap: break-word; font-size: 20px;">{{content.content}}</p>
                     </tr>
-                    <tr *ngIf="content.title===undefined">
-                        <td style="word-wrap: break-word; font-weight: bold;" >{{content}}</td>
+                    <tr *ngIf="content===undefined">
+                        <td style="word-wrap: break-word; font-weight: bold;" >{{contentError}}</td>
                        
                       </tr>
 
@@ -92,9 +92,9 @@
      <table>
         <tbody style="background-color: white; ">
             <tr *ngIf="subscribedbook!=null">
-                <p style="word-wrap: break-word; font-weight: bold;" >{{subscribedbook.books.title}}</p>
+                <p style="word-wrap: break-word; font-weight: bold; font-size: 30px;" >{{subscribedbook.books.title}}</p>
                 <hr/>
-                <p style="word-wrap: break-word;">{{subscribedbook.books.content}}</p>
+                <p style="word-wrap: break-word;  font-size: 20px; ">{{subscribedbook.books.content}}</p>
               </tr>
 
         </tbody>

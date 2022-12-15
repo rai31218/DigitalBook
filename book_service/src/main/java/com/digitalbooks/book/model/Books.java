@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -23,27 +25,35 @@ public class Books {
 	@Lob
 	public Blob logo; 
 	
+	@NotNull
 	@Column(name="TITLE")
 	private String title;
 	
+	@NotNull
 	@Column(name="Category")
 	private String category;
 	
+	@NotNull
+	@Min(value = 0)
 	@Column(name="Price")
 	private double price;
+	
 	
 	@Column(name="AUTHOR")
 	private int authorId;
 	
+	@NotNull
 	@Column(name="PUBLISHER")
 	private String publisher;
 	
 	@Column(name="PUBLISHED_DATE")
 	private Date publishedDate; 
 	
+	@NotNull
 	@Column(name="ACTIVE")
 	private boolean active;
 	
+	@NotNull
 	@Column(name="CONTENT")
 	private String content;
 	

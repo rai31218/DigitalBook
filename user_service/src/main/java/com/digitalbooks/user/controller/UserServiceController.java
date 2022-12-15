@@ -5,11 +5,11 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,12 +35,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.digitalbooks.user.dto.Books;
 import com.digitalbooks.user.dto.BooksWithByteFile;
 import com.digitalbooks.user.dto.BooksWithLogo;
-import com.digitalbooks.user.dto.BooksWithMultipartFile;
+import com.digitalbooks.user.dto.UsersDTO;
 import com.digitalbooks.user.jwt.AuthRequest;
 import com.digitalbooks.user.jwt.JwtResponse;
 import com.digitalbooks.user.jwt.JwtUtil;
 import com.digitalbooks.user.jwt.UserDetailsImpl;
-import com.digitalbooks.user.model.Subscription;
 import com.digitalbooks.user.model.Users;
 import com.digitalbooks.user.payload.response.MessageResponse;
 import com.digitalbooks.user.service.UserService;
@@ -81,23 +79,19 @@ public class UserServiceController {
 	
 	@GetMapping("/test")
 	public String test() {
-		System.out.println("Server:c"+server);
-
 		return "It is User Service "+server ;
 			}
 
 	
 	@PostMapping(value="/uploadlogo")
 	public void uploadLogo(@RequestParam("file") MultipartFile file) throws IOException {
-		//this.file=file;	
 		try {
-			//BooksWithMultipartFile book =(BooksWithMultipartFile) bookLogo;
 			if (file != null) {
 				this.byteslogo = file.getBytes();
 		         
 			}
 		} catch (Exception e) {
-		//	e.printStackTrace();
+
 			throw new IOException(e.getMessage()); ///sonar
 		} 
 		
@@ -105,32 +99,21 @@ public class UserServiceController {
 	}
 	@PostMapping(value="/author/{author-id}/books", consumes = { "application/json" })
     public ResponseEntity<?> saveBook(
-    		//@RequestParam(value="file", required=false) MultipartFile file,
-    		@RequestBody Books book, 
+    		@Valid @RequestBody Books book, 
     		@PathVariable("author-id") int authorId) throws IOException {
 		
 		boolean isUserAuthor = userService.checkAuthorExists(authorId);
 		if(isUserAuthor) {
 			byte[] bytes = this.byteslogo;
-			
-//			try {
-//				//BooksWithMultipartFile book =(BooksWithMultipartFile) bookLogo;
-//				if (this.file != null) {
-//					bytes = this.file.getBytes();
-//			         
-//				}
-//			} catch (Exception e) {
-//			//	e.printStackTrace();
-//				throw new IOException(e.getMessage()); ///sonar
-//			} 
+
 			BooksWithByteFile booksWithLogo = new BooksWithByteFile();
 			booksWithLogo.setFile(bytes);
 			booksWithLogo.setBooks(book);
 
-			Books savedBook = restTemplate.postForObject(createBook+authorId, booksWithLogo, Books.class);
+			Integer savedBookId = restTemplate.postForObject(createBook+authorId, booksWithLogo, Integer.class);
 
-			if(savedBook!=null) {
-				return ResponseEntity.ok(savedBook);	
+			if(savedBookId!=null) {
+				return ResponseEntity.status(HttpStatus.CREATED).body(savedBookId)	;
 			}
 			else {
 		       return ResponseEntity.badRequest().body(new MessageResponse("Author has already a book with same Name"));
@@ -145,22 +128,12 @@ public class UserServiceController {
 		
 	@PostMapping("/author/{author-id}/books/{book-id}")
 	public ResponseEntity<?> updateBook(
-    		@RequestBody Books book,
+			@Valid @RequestBody Books book,
     		@PathVariable("author-id") int authorId,
     		@PathVariable("book-id") int bookId) throws Exception {
 		boolean isUserAuthor = userService.checkAuthorExists(authorId);
 		if(isUserAuthor) {
 			byte[] bytes = this.byteslogo;
-		//	byte[] bytes = null;
-//			try {
-//				
-//				if (file != null) {
-//					bytes = file.getBytes();
-//			         
-//				}
-//			} catch (IOException e) {
-//				throw new IOException(e.getMessage()); ///sonar
-//			} 
 			BooksWithByteFile booksWithLogo = new BooksWithByteFile();
 			booksWithLogo.setFile(bytes);
 			booksWithLogo.setBooks(book);
@@ -183,10 +156,10 @@ public class UserServiceController {
 		
 
 	@PostMapping("/sign-in")
-	public ResponseEntity<?> generateToken(@RequestBody AuthRequest authRequest,
+	public ResponseEntity<?> generateToken(@Valid @RequestBody AuthRequest authRequest,
 			HttpServletResponse httpServletResponse, HttpSession session) throws Exception {
 		try {
-			System.out.println(authRequest.getUserName() + " and "+ authRequest.getPassword());
+			
 			Authentication authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword()));
 
@@ -206,7 +179,7 @@ public class UserServiceController {
 	}
 
 	@PostMapping("/sign-up")
-	public ResponseEntity<?> signUp(@RequestBody Users user) {
+	public ResponseEntity<?> signUp(@Valid @RequestBody UsersDTO user) {
 		Users duplicateUser = userService.duplicateUserNameAnsEmail(user.getUserName(), user.getEmail());
 		if (duplicateUser != null) {
 			return ResponseEntity.badRequest()
@@ -215,7 +188,7 @@ public class UserServiceController {
 		user.setPassword(encoder.encode(user.getPassword()));
 		user.setCreatedDate(new Date());
 		userService.saveUser(user);
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("User registered successfully!"));
 
 	}
 
@@ -250,7 +223,8 @@ public class UserServiceController {
 	
 	@PutMapping("author/{author-id}/books/{book-id}")
 	public ResponseEntity<?> blockBook(@PathVariable("author-id") int userId, @PathVariable("book-id") int bookId, @RequestParam("block") String block) {
-	 return restTemplate.getForEntity(bookUrl+"cancel/"+userId+"/"+bookId+"/"+block , MessageResponse.class);		
+		ResponseEntity<MessageResponse> blocked = restTemplate.getForEntity(bookUrl+"cancel/"+userId+"/"+bookId+"/"+block , MessageResponse.class);		
+	  return blocked;
 	}
 	
 	/**fetch book for update
@@ -275,7 +249,7 @@ public class UserServiceController {
 		} else {
 			return ResponseEntity.ok(booksWithLogo);
 		}
-	 //return restTemplate.getForEntity(bookUrl+bookId, BooksWithLogo.class);		
+		
 	}
 	
 	
@@ -292,22 +266,22 @@ public class UserServiceController {
 		if (!userId) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
 		} else {
-			//Optional<List<Subscription>> subscriptionList = userService.fetchSubscribedBooksForUser(userId);
 			List<BooksWithLogo> listofBooks = new ArrayList<>();
-			//int count= restTemplate.getForObject(bookUrl + "count/book"+user , Integer.class);
-		//	if (!subscriptionList.isEmpty() && !subscriptionList.get().isEmpty()) {
-				//for (int i = 0; i < count; i++) {
-				//	int bookId = subscriptionList.get().get(i).getBookId();
-
 					byte[] logo[] = restTemplate.getForObject(bookUrl + "createdbook/logo/" + user, byte[][].class);
 					responseBook = restTemplate.getForObject(bookUrl + "createdbook/" + user, Books[].class);
 
 					try {
-						for(int i=0 ;i <responseBook.length;i++) {
-							Blob blob = userService.fetchBlob(logo[i]);
-							booksWithLogo = new BooksWithLogo(blob, responseBook[i]);
-							listofBooks.add(booksWithLogo);
+						if(responseBook!=null) {
+							for(int i=0 ;i <responseBook.length;i++) {
+								if(logo!=null) {
+									Blob blob = userService.fetchBlob(logo[i]);
+									booksWithLogo = new BooksWithLogo(blob, responseBook[i]);
+									listofBooks.add(booksWithLogo);
+								}
+								
+							}
 						}
+						
 						
 					} catch (Exception ex) {
 						throw new Exception(ex.getMessage());
@@ -318,11 +292,6 @@ public class UserServiceController {
 			//	}
 
 				return ResponseEntity.ok(listofBooks);
-			//}
-
-//			else {
-//				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No subscription found");
-//			}
 
 		}
 

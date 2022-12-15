@@ -1,6 +1,6 @@
 package com.digitalbooks.user.dto;
 
-import java.sql.Blob;
+
 import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;

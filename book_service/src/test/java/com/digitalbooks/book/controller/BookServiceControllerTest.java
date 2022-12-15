@@ -1,11 +1,13 @@
 package com.digitalbooks.book.controller;
 
 
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -54,6 +56,25 @@ public class BookServiceControllerTest {
 	public void setUp() {
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
+	
+	
+	@Test
+	public void testSaveBook() throws Exception {
+
+		mockMvc.perform(post("/digitalbooks/author/1")
+				.contentType(MediaType.APPLICATION_JSON).content("{\r\n"
+						+ "    \"title\":\" Abol Tabol\",\r\n"
+						+ "    \"category\": \"Kids\",\r\n"
+						+ "    \"price\": \"120\",\r\n"
+						+ "    \"publisher\":\"SR\""
+						+ "}"))
+				.andExpect(status().isOk());
+						//("message": "User registered successfully!"));
+	
+	}
+	
+	
+	
 	@Test
 	public void testGetBook() throws Exception {
 		Books books = new Books();

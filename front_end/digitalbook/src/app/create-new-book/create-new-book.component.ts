@@ -87,7 +87,7 @@ export class CreateNewBookComponent implements OnInit {
         
         
         observable.subscribe({
-        next:(data:Book)=> {
+        next:(data:number)=> {
           this.isSuccess="Book is created";
         },
         error:(err)=> {console.log("Error:" + err.message); this.createstatus=err}

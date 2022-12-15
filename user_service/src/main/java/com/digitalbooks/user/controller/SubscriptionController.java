@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import com.digitalbooks.user.dto.BookContentResponse;
 import com.digitalbooks.user.dto.Books;
 import com.digitalbooks.user.dto.BooksWithLogo;
+import com.digitalbooks.user.dto.BooksWithLogoandUserName;
 import com.digitalbooks.user.model.Subscription;
 import com.digitalbooks.user.payload.response.MessageResponse;
 import com.digitalbooks.user.pyload.request.SubscriptionPayLoad;
@@ -92,7 +93,11 @@ public class SubscriptionController {
 	public ResponseEntity<?> getSubscriptionId(@PathVariable("user-id") int userId, 
 		@PathVariable("book-id") int bookId) {
 		 Optional<List<Subscription>> id =subscriptionService.fetchSubscriptionIdByBookIdAndUserId(userId, bookId);
-		 return ResponseEntity.ok(id.get().get(0));
+		 if(id.isPresent()) {
+			 return ResponseEntity.ok(id.get().get(0)); 
+		 }
+		 return null;
+		
 	}
 	
 	
@@ -107,24 +112,25 @@ public class SubscriptionController {
 	public ResponseEntity<?> getSubscribedBooks(@PathVariable("emailId") String email) throws Exception {
 		Books responseBook = null;
 		BooksWithLogo booksWithLogo = null;
-
+		BooksWithLogoandUserName bookWIthLogoAndUse = null;
 		int userId = subscriptionService.getUserIdByEmail(email);
 		if (userId == 0) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
 		} else {
 			Optional<List<Subscription>> subscriptionList = subscriptionService.fetchSubscribedBooksForUser(userId);
-			List<BooksWithLogo> listofBooks = new ArrayList<>();
+			List<BooksWithLogoandUserName> listofBooks = new ArrayList<>();
 			if (!subscriptionList.isEmpty() && !subscriptionList.get().isEmpty()) {
 				for (int i = 0; i < subscriptionList.get().size(); i++) {
 					int bookId = subscriptionList.get().get(i).getBookId();
 
 					byte[] logo = restTemplate.getForObject(bookUrl + "subscribed/logo/" + bookId, byte[].class);
 					responseBook = restTemplate.getForObject(bookUrl + "subscribed/" + bookId, Books.class);
-
+					String userNameOfBook = subscriptionService.getUserNameByUserIdFromBookObject(responseBook.getAuthorId());
 					try {
+						
 						Blob blob = subscriptionService.fetchBlob(logo);
-						booksWithLogo = new BooksWithLogo(blob, responseBook);
-						listofBooks.add(booksWithLogo);
+						bookWIthLogoAndUse = new BooksWithLogoandUserName(blob, responseBook, userNameOfBook);
+						listofBooks.add(bookWIthLogoAndUse);
 					} catch (Exception ex) {
 						throw new Exception(ex.getMessage());
 					}

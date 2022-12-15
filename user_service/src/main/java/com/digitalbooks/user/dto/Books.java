@@ -1,28 +1,36 @@
 package com.digitalbooks.user.dto;
 
-import java.sql.Blob;
 import java.util.Date;
-import java.util.Optional;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 
 public class Books {
 
 	private int id;
 	
+	@NotBlank
 	private String title;
 
+	@NotBlank
 	private String category;
 
+	@NotBlank
+	@Min(value = 0)
 	private double price;
 
 	private int authorId;
 
+	@NotBlank
 	private String publisher;
 
 	private Date publishedDate; 
 
+	@NotBlank
 	private boolean active;
 
+	@NotBlank
 	private String content;
 	
 	

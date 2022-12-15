@@ -39,7 +39,7 @@ public class BookServiceController {
 	}
 	
 	@PostMapping("/author/{author-id}")
-	public Books saveBook( @RequestBody BooksWithByteFile book,
+	public int saveBook( @RequestBody BooksWithByteFile book,
 			@PathVariable("author-id") int authorId) {
 		Blob blob = null;
 		try {
@@ -120,7 +120,7 @@ public class BookServiceController {
 
 		} else if (block.equalsIgnoreCase("yes") || block.equalsIgnoreCase("no") ) {
 			Books savedBook = bookService.blockBook(bookId, block);
-			return ResponseEntity.ok(new MessageResponse("Updated book status\n" + savedBook));
+			return ResponseEntity.ok(new MessageResponse("Updated book status"));
 		}
 		
 		else {

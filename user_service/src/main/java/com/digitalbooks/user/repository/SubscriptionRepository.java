@@ -22,7 +22,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Stri
 	public Optional<List<Subscription>> fetchSubscriptionByUser(int userId);
 
 
-	public Subscription findByBookIdAndUser(int bookId, Users user);
+	public List<Subscription> findByBookIdAndUser(int bookId, Users user);
 	
 	
 

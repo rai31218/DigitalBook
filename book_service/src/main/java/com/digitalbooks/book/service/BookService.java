@@ -10,12 +10,16 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.digitalbooks.book.model.Books;
 import com.digitalbooks.book.payload.response.BookContentResponse;
 import com.digitalbooks.book.payload.response.BooksResponse;
 import com.digitalbooks.book.payload.response.BooksWithByteFile;
+import com.digitalbooks.book.payload.response.MessageResponse;
 import com.digitalbooks.book.repository.BookRepository;
 
 @Service
@@ -25,7 +29,7 @@ public class BookService {
 	@Autowired 
 	private BookRepository bookRepository;
 	
-	public Books saveBook(Blob blob, BooksWithByteFile book, int authorId) {
+	public int saveBook(Blob blob, BooksWithByteFile book, int authorId) {
 		Optional<Books> existingBook = bookRepository.findByTitleAndAuthorId(book.getBooks().getTitle(),authorId);
 		if(existingBook.isEmpty()) { // author with same book title check
 			Books bookToBeSaved = new Books();
@@ -38,10 +42,13 @@ public class BookService {
 			bookToBeSaved.setPublishedDate(new Date());
 			bookToBeSaved.setPublisher(book.getBooks().getPublisher());
 			bookToBeSaved.setTitle(book.getBooks().getTitle());
-			return bookRepository.save(bookToBeSaved);
+			Books savedBooks= bookRepository.save(bookToBeSaved);
+			System.out.println("saved book Id: "+savedBooks.getId() );
+			return savedBooks.getId();
+					
 		}
 		else {
-			return null;
+			return 0;
 		}
 
 	}
@@ -194,7 +201,7 @@ public class BookService {
 			
 		//	byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			
 		}
 		return byteArray;
 	}
@@ -216,14 +223,20 @@ public class BookService {
 			Optional<Books> book =	bookRepository.findById(bookId);
 			byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			
 		}
 		return byteArray;
 	}
 
 	public Books getBookForUpdation(int bookId) {
+		Optional<Books> book1 = bookRepository.findById(bookId);
+		if(book1.isPresent()) {
+			return book1.get();
+		}
+		else {
+			return null;
+		}
 		
-		return bookRepository.findById(bookId).get();
 	}
 
 

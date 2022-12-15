@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Book } from '../_model/book.model';
 import { BookContentResponse } from '../_model/bookcontentresponse.model';
 import { BooksWithLogo } from '../_model/bookswithlogo.model';
+import { BooksWithLogoAndUserName } from '../_model/bookswithlogoandusername.model';
 import { JwtResponse } from '../_model/jwtResponse.model';
 import { MessageResponse } from '../_model/messageresponse.model';
 import { Subscription } from '../_model/subscription.model';
@@ -34,6 +35,7 @@ export class SubscribedBookComponent implements OnInit {
   subscribedbook: any;
   subscribedbookError: any;
   submitted: boolean;
+  contentError: any;
 
   constructor(private bookService: BookService, private userService: UserService,
      private sanitizer: DomSanitizer, private route: ActivatedRoute) {
@@ -61,11 +63,11 @@ export class SubscribedBookComponent implements OnInit {
     this.subdIdList=[];
     subscribedBooks.subscribe({
 
-      next: (data:BooksWithLogo[])=>   {
+      next: (data:BooksWithLogoAndUserName[])=>   {
 
         for( let i:number=0 ;i<data.length;i++){
           console.log("I"+i)
-             this.subscribeBookList[i]=(data[i].books)
+             this.subscribeBookList[i]=(data[i])
 
              let objectURL = 'data:image/jpeg;base64,' + data[i].logo;
              this.thumbnail.push(this.sanitizer.bypassSecurityTrustUrl(objectURL));
@@ -83,10 +85,10 @@ export class SubscribedBookComponent implements OnInit {
     
     this.currentUser = this.userService.currentUserValue;
     const subscribedBooks = this.bookService.getSubscriptionIdOfEachBook(userId, bookId);
-console.log("success")
-this.subscriptionId=null;
-var id =this.subscriptionId;
-subscribedBooks.subscribe({
+    console.log("success")
+    this.subscriptionId=null;
+    var id =this.subscriptionId;
+    subscribedBooks.subscribe({
 
       next: (data:Subscription)=>   {
         console.log("success")
@@ -116,7 +118,7 @@ subscribedBooks.subscribe({
     this.isOpenBook=true;
     this.bookService.openBook(this.currentUser.email, subscriptionId).subscribe({
     next:(data:BookContentResponse)=>{this.content=data},
-    error:(err)=>{this.content=err}
+    error:(err)=>{this.contentError=err}
     })
   }
 
