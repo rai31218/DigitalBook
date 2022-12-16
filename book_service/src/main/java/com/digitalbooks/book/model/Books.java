@@ -34,9 +34,9 @@ public class Books {
 	private String category;
 	
 	@NotNull
-	@Min(value = 0)
+	@Min(value = (long) 0.0)
 	@Column(name="Price")
-	private double price;
+	private Double price;
 	
 	
 	@Column(name="AUTHOR")
@@ -51,7 +51,7 @@ public class Books {
 	
 	@NotNull
 	@Column(name="ACTIVE")
-	private boolean active;
+	private Boolean active;
 	
 	@NotNull
 	@Column(name="CONTENT")

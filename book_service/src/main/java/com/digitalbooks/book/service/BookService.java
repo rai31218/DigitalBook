@@ -99,7 +99,15 @@ public class BookService {
 		byte[] byteArray = null;
 		try {
 			Optional<Books> book =	bookRepository.searchBook(category,title,authorId,price,publisher);
-			byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
+			if( book.isEmpty()) 
+			{ return null ;
+			}
+			else {
+				if(book.get().getLogo()!=null) {
+				byteArray =book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
+				}
+			}
+				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -116,7 +124,16 @@ public class BookService {
 		byte[] byteArray = null;
 		try {
 			Optional<Books> book =	bookRepository.findById(bookId);
-			byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
+			if(book.isEmpty()) {
+				return null;
+			}
+			else {
+				if(book.get().getLogo()!=null) {
+					byteArray = book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
+					
+				}
+				}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -189,18 +206,19 @@ public class BookService {
 		byte[] byteArray[] = new byte[1000][];
 		try {
 			Optional<List<Books>> book =	bookRepository.findByAuthorId(userId);
+			
 			if(book.isEmpty()) {
 				byteArray=null;
 			}
 			else {
-				System.out.println("length: "+byteArray.length);
 				for(int i=0; i<book.get().size();i++) {
-					byteArray[i]=book.get().get(i).getLogo().getBytes(1, (int)book.get().get(i).getLogo().length());
+					if(book.get().get(i).getLogo()!=null) {
+						byteArray[i]=book.get().get(i).getLogo().getBytes(1, (int)book.get().get(i).getLogo().length());
+					}
+					
 				}
 			}
-			
-		//	byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
-		} catch (SQLException e) {
+} catch (SQLException e) {
 			
 		}
 		return byteArray;
@@ -221,7 +239,14 @@ public class BookService {
 		byte[] byteArray = null;
 		try {
 			Optional<Books> book =	bookRepository.findById(bookId);
-			byteArray = book.isEmpty()? null : book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
+			if(book.isEmpty()) {
+				return null;
+			}
+			else {
+				if(book.get().getLogo()!=null) {
+					book.get().getLogo().getBytes(1,(int)book.get().getLogo().length());
+				}
+			}
 		} catch (SQLException e) {
 			
 		}

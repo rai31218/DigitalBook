@@ -15,10 +15,10 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Stri
 
 	public Subscription findByBookId(int bookId);
 
-	@Query(value = "Select U.id from Users U where U.email=:email",nativeQuery=true)
+	@Query(value = "Select U.id from users U where U.email=:email",nativeQuery=true)
 	public Optional<Integer> fetchUserByEmail(String email);
 
-	@Query(value = "Select S.ID, S.USER_FID, S.BOOK_ID, S.DATE_OF_SUBSCRIPTION, S.CANCELLED, S.DATE_OF_CANCEL from Subscription S where S.USER_FID=:userId and cancelled=0",nativeQuery=true)
+	@Query(value = "Select S.ID, S.USER_FID, S.BOOK_ID, S.DATE_OF_SUBSCRIPTION, S.CANCELLED, S.DATE_OF_CANCEL from subscription S where S.USER_FID=:userId and cancelled=0",nativeQuery=true)
 	public Optional<List<Subscription>> fetchSubscriptionByUser(int userId);
 
 
@@ -26,7 +26,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Stri
 	
 	
 
-	@Query(value = "Select S.ID, S.USER_FID, S.BOOK_ID, S.DATE_OF_SUBSCRIPTION, S.CANCELLED, S.DATE_OF_CANCEL from Subscription S where S.USER_FID=:userId and S.BOOK_ID=:bookId and cancelled=0",nativeQuery=true)
+	@Query(value = "Select S.ID, S.USER_FID, S.BOOK_ID, S.DATE_OF_SUBSCRIPTION, S.CANCELLED, S.DATE_OF_CANCEL from subscription S where S.USER_FID=:userId and S.BOOK_ID=:bookId and cancelled=0",nativeQuery=true)
 	public Optional<List<Subscription>> searchSubscriptionIdByBookIdAndUserId(int userId, int bookId);
 
 }

@@ -43,7 +43,10 @@ public class BookServiceController {
 			@PathVariable("author-id") int authorId) {
 		Blob blob = null;
 		try {
-     	blob = new javax.sql.rowset.serial.SerialBlob(book.getFile());
+	    if(book!=null && book.getFile()!=null) {
+	    	blob = new javax.sql.rowset.serial.SerialBlob(book.getFile());
+	    }
+     	
 			
 		}  catch ( Exception e) {
 			e.printStackTrace();
@@ -58,8 +61,9 @@ public class BookServiceController {
 			) {
 		Blob blob = null;
 		try {
-     	blob = new javax.sql.rowset.serial.SerialBlob(book.getFile());
-			
+			 if(book!=null && book.getFile()!=null) {
+			    	blob = new javax.sql.rowset.serial.SerialBlob(book.getFile());
+			    }
 		}  catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -4,33 +4,34 @@ import java.util.Date;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
 public class Books {
 
 	private int id;
 	
-	@NotBlank
+	@NotNull
 	private String title;
 
-	@NotBlank
+	@NotNull
 	private String category;
 
-	@NotBlank
+	@NotNull
 	@Min(value = 0)
 	private double price;
 
 	private int authorId;
 
-	@NotBlank
+	@NotNull
 	private String publisher;
 
 	private Date publishedDate; 
 
-	@NotBlank
+	@NotNull
 	private boolean active;
 
-	@NotBlank
+	@NotNull
 	private String content;
 	
 	
