@@ -18,7 +18,7 @@
                         <span style="word-wrap: break-word;">Author : {{subscribeBook.userName}}</span>
 
                         <br/>
-                        <span style="word-wrap: break-word;"><button (click)="unsubscribe(subdIdList[i].id)"  class="btn btn-primary">Unsubscribe</button>
+                        <span style="word-wrap: break-word;"><button (click)="unsubscribe(subdIdList.get(subscribeBook.books.id).id)"  class="btn btn-primary">Unsubscribe</button>
                         </span>
                         <hr/>
                 </tbody>

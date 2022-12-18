@@ -25,7 +25,7 @@ export class SubscribedBookComponent implements OnInit {
   thumbnail: any[];
   res: number;
   subscriptionId:Subscription;
-  subdIdList: any[];
+  subdIdList = new Map<number, Subscription>();
   isOpenBook: boolean=false;
   content: any;
   unsubscribeMessage: MessageResponse;
@@ -60,7 +60,7 @@ export class SubscribedBookComponent implements OnInit {
     this.subscribeBookList =[]
     this.thumbnail=[];
     this.subscriptionIdList=[];
-    this.subdIdList=[];
+    //this.subdIdList=[];
     subscribedBooks.subscribe({
 
       next: (data:BooksWithLogoAndUserName[])=>   {
@@ -93,7 +93,8 @@ export class SubscribedBookComponent implements OnInit {
       next: (data:Subscription)=>   {
         console.log("success")
         this.subscriptionId=data;
-        this.subdIdList.push( this.subscriptionId);
+        this.subdIdList.set(bookId,this.subscriptionId);
+      //  map.set(key, value)
         
        },
        error:(err)=>{console.log("error: "+err)}
@@ -101,12 +102,14 @@ export class SubscribedBookComponent implements OnInit {
     });
     console.log("success "+this.subscriptionId)       
   }
-  public unsubscribe(id:number){
+  public unsubscribe(id:string){
     this.unsubscribeMessage=null;
     this.unsubscribeErrorMessage=null;
    this.bookService.unsubscribe(this.currentUser.email,id).subscribe({
     next:(data)=>{console.log(data);
-    this.unsubscribeMessage=data},
+    this.unsubscribeMessage=data
+  
+     },
     error:(err)=>{console.log(err);
     this.unsubscribeErrorMessage=err}
    })

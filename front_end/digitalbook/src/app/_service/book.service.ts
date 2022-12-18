@@ -108,7 +108,7 @@ let subscribedvbookurl = commonURl+"readers/";
     //.pipe(map(response => response));
   
    }
-  public unsubscribe(email:string, subscriptionId: number) {
+  public unsubscribe(email:string, subscriptionId: string) {
     let subscribedvbookurl = commonURl+"readers/"+email+"/books/"+subscriptionId+"/cancel-subscription"
     return this.http.put(subscribedvbookurl, null);
   }
