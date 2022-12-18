@@ -60,6 +60,7 @@ export class BooksComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true;
+        this.status = "";
         // stop here if form is invalid
         if (this.searchBookForm.invalid) {
             return;

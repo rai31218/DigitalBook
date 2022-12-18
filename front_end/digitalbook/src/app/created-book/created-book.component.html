@@ -13,13 +13,13 @@
              <table>
                 <tbody *ngFor="let createdBook of createdBookList; let i= index" style="background-color: white; ">
                     <tr >
-                        <p style="word-wrap: break-word;"> <img id="myimage" [src]='thumbnail[i]' style="height: 50px;" /></p>
+                        <p style="word-wrap: break-word;"> <img id="myimage" [src]='thumbnail[i]' style="height: 50px; width: 50px;;" /></p>
                         <p style="word-wrap: break-word; font-weight: bold;">Book: {{createdBook.title}}</p>
                         <span style="word-wrap: break-word;">Category : {{createdBook.category}}</span>&nbsp;
                         <span style="word-wrap: break-word;">Publisher : {{createdBook.publisher}}</span>&nbsp;
                         <span style="word-wrap: break-word;">Price : {{createdBook.price}}</span>
 
-                    <br/>
+                    <br/><br/>
                         <span style="word-wrap: break-word;" *ngIf="createdBook.active"><button 
                           (click)="block(createdBook.id, createdBook.active)" class="btn btn-primary">Block</button>
                         </span>

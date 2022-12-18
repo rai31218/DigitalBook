@@ -27,7 +27,7 @@ import com.digitalbooks.user.payload.response.MessageResponse;
 import com.digitalbooks.user.pyload.request.SubscriptionPayLoad;
 import com.digitalbooks.user.service.SubscriptionService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "https://digitalbook-frontend.s3.amazonaws.com"})
 @RestController
 @RequestMapping(value = "/digitalbooks")
 public class SubscriptionController {
@@ -125,18 +125,21 @@ public class SubscriptionController {
 
 					byte[] logo = restTemplate.getForObject(bookUrl + "subscribed/logo/" + bookId, byte[].class);
 					responseBook = restTemplate.getForObject(bookUrl + "subscribed/" + bookId, Books.class);
-					String userNameOfBook = subscriptionService.getUserNameByUserIdFromBookObject(responseBook.getAuthorId());
+					String userNameOfBook = responseBook!=null?
+							subscriptionService.getUserNameByUserIdFromBookObject(responseBook.getAuthorId()) : "";
+							
 					try {
 						
 						Blob blob = subscriptionService.fetchBlob(logo);
 						bookWIthLogoAndUse = new BooksWithLogoandUserName(blob, responseBook, userNameOfBook);
 						listofBooks.add(bookWIthLogoAndUse);
+						if (responseBook == null) {
+							return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BOOK_NOT_FOUND);
+						}
 					} catch (Exception ex) {
 						throw new Exception(ex.getMessage());
 					}
-					if (responseBook == null) {
-						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BOOK_NOT_FOUND);
-					}
+
 				}
 
 				return ResponseEntity.ok(listofBooks);

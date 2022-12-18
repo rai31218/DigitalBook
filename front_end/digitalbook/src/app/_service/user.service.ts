@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { User } from '../_model/user.model';
 import { Role } from '../_model/role.model';
 
-const commonUrl="http://localhost:8081/digitalbooks/";
+const commonUrl="https://ypjgul3ixb.execute-api.ap-northeast-1.amazonaws.com/UAT/";
 const url = commonUrl+"sign-up";
 const urlSignIn = commonUrl+"sign-in"
 @Injectable({

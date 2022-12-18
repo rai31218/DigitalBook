@@ -11,7 +11,7 @@ import { SubscriptionPayLoad } from '../_model/subscriptionpayload.model';
 
 
 
-const commonURl="http://localhost:8081/digitalbooks/"
+const commonURl="https://ypjgul3ixb.execute-api.ap-northeast-1.amazonaws.com/UAT/"
 @Injectable({
   providedIn: 'root'
 })
@@ -82,11 +82,12 @@ public updateBooks(logo:File, category:string, title:string, authorId:number, pr
     let subscriptionurl = commonURl;
     let subcribe:SubscriptionPayLoad ={
       bookId:bookId,
-      email: this.currentUser.email
+      //email: this.currentUser.email
+      email: JSON.parse(localStorage.getItem("currentUser")).email
     }
-    const formdata: FormData = new FormData();  
-    formdata.append('bookId',JSON.stringify(bookId));
-    formdata.append('email', this.currentUser.email)
+   // const formdata: FormData = new FormData();  
+   // formdata.append('bookId',JSON.stringify(bookId));
+   // formdata.append('email', this.currentUser.email)
     return this.http.post(subscriptionurl+bookId+"/subscribe", subcribe)
   }
 
