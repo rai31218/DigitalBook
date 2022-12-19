@@ -7,6 +7,7 @@ import { UserService } from '../_service/user.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Book } from '../_model/book.model';
 import { Router, ActivatedRoute } from "@angular/router";
+import { MessageResponse } from '../_model/messageresponse.model';
 
 @Component({
   selector: 'app-created-book',
@@ -32,6 +33,7 @@ export class CreatedBookComponent implements OnInit {
   loading = false;
   updatableValue: BooksWithLogo;
   isActive:boolean=true;
+  blockUnblockMessage: any;
 
   constructor(private bookService: BookService, private userService: UserService,
      private sanitizer: DomSanitizer,
@@ -104,8 +106,11 @@ export class CreatedBookComponent implements OnInit {
       observable = this.bookService.blockBook(this.currentUser.id, bookId, "no")
     }
     observable.subscribe({
-next:(data)=>{console.log(data);
-  this.router.navigate(["/createdbooks"]); 
+     
+next:(data:MessageResponse)=>{console.log(data);
+  this.blockUnblockMessage=data;
+  console.log("blockmessage :"+this.blockUnblockMessage.message);
+ // this.router.navigate(["/createdbooks"]); 
 },
 error:(err)=>{console.log(err)}
 

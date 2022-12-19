@@ -13,7 +13,7 @@
              <table>
                 <tbody *ngFor="let createdBook of createdBookList; let i= index" style="background-color: white; ">
                     <tr >
-                        <p style="word-wrap: break-word;"> <img id="myimage" [src]='thumbnail[i]' style="height: 50px; width: 50px;;" /></p>
+                        <p style="word-wrap: break-word;"> <img id="myimage" [src]='thumbnail[i]' style="height: 70px; width: 70px;;" /></p>
                         <p style="word-wrap: break-word; font-weight: bold;">Book: {{createdBook.title}}</p>
                         <span style="word-wrap: break-word;">Category : {{createdBook.category}}</span>&nbsp;
                         <span style="word-wrap: break-word;">Publisher : {{createdBook.publisher}}</span>&nbsp;
@@ -28,12 +28,13 @@
                         </span> &nbsp;
                         <span style="word-wrap: break-word;"><button (click)="update(createdBook.id)" class="btn btn-primary">Update</button></span>
                         </tr>
+                        
                         <hr/>
 
                 </tbody>
-
-             </table>
               
+             </table>
+             <p *ngIf="blockUnblockMessage!=null">{{blockUnblockMessage.message}}</p>
          
           </div>
         </div>

@@ -13,7 +13,7 @@
                 <tbody *ngFor="let subscribeBook of subscribeBookList; let i= index" style="background-color: white; ">
                     <tr >
                         <p style="word-wrap: break-word;"> <img id="myimage" [src]='thumbnail[i]' style="height: 100px; width: 100px;" /></p> 
-                        <p style="word-wrap: break-word; font-weight: bold;" (click)="openBook(subdIdList[i].id)">Book: {{subscribeBook.books.title}}</p>
+                        <p style="word-wrap: break-word; font-weight: bold;" (click)="openBook(subdIdList.get(subscribeBook.books.id).id)">Book: {{subscribeBook.books.title}}</p>
                         <span style="word-wrap: break-word;">Category : {{subscribeBook.books.category}}</span> &nbsp;
                         <span style="word-wrap: break-word;">Author : {{subscribeBook.userName}}</span>
 
